@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% block base %}
+<!--        内容-->
+<h3 class="text-center lead">冠通期货交易权限开通申请系统</h3>
+<div class="center">
+    <form action="{{ url_for('apply') }}" method="POST" name="login">
+        <p class=" lead">申请类型：</p>
+        <table class="table table-bordered table-hover table-condensed"  >
+          <tr class="active">
+              <td>中金所</td>
+              <td>
+                  <div class="checkbox">
+                      <label>
+                        <input type="checkbox" value="">
+                        开户申请C4
+                      </label>
+                    </div>
+              </td>
+              <td></td>
+          </tr>
+            <tr  class="active">
+              <td>能源中心</td>
+              <td>
+                  <div class="checkbox">
+                      <label>
+                        <input type="checkbox" value="">
+                        开户申请C3
+                      </label>
+                  </div>
+              </td>
+              <td>
+                  <div class="checkbox">
+                      <label>
+                        <input type="checkbox" value="">
+                        原油期货交易权限C4
+                      </label>
+                  </div>
+              </td>
+          </tr>
+            <tr  class="active">
+              <td>上期所</td>
+              <td>
+                   <div class="checkbox">
+                      <label>
+                        <input type="checkbox" value="">
+                        期权交易权限C4
+                      </label>
+                  </div>
+              </td>
+              <td></td>
+          </tr>
+            <tr class="active">
+              <td>大商所</td>
+              <td>
+                   <div class="checkbox">
+                      <label>
+                        <input type="checkbox" value="">
+                        铁矿石期货交易权限C3
+                      </label>
+                  </div>
+              </td>
+              <td>
+                   <div class="checkbox">
+                      <label>
+                        <input type="checkbox" value="">
+                        期权交易权限C4
+                      </label>
+                  </div>
+              </td>
+          </tr>
+            <tr class="active">
+              <td>郑商所</td>
+              <td>
+                   <div class="checkbox">
+                      <label>
+                        <input type="checkbox" value="">
+                        PTA期货交易权限C3
+                      </label>
+                  </div>
+              </td>
+              <td>
+                   <div class="checkbox">
+                      <label>
+                        <input type="checkbox" value="">
+                        期权交易权限C4
+                      </label>
+                  </div>
+              </td>
+          </tr>
+        </table>
+        <p class=" lead">权限证明文件：</p>
+        <div class="form-group">
+            <ul class="list-unstyled text-indent" >
+                <li style="margin: 0 auto">
+                      <div class="checkbox">
+                          <label>
+                            <input type="checkbox" value="1" name="zjsbm">
+                            具有中金所编码
+                          </label>
+                        </div>
+                </li>
+                <li>
+                      <div class="checkbox">
+                          <label>
+                            <input type="checkbox" value="2">
+                            具有能源中心编码
+                          </label>
+                        </div>
+                </li>
+                <li>
+                      <div class="checkbox">
+                          <label>
+                            <input type="checkbox" value="">
+                            具有本公司其他适当性品种交易权限
+                          </label>
+                        </div>
+                </li>
+                <li>
+                      <div class="checkbox">
+                          <label>
+                            <input type="checkbox" value="">
+                            具有50个交易日交易记录（一年内）
+                          </label>
+                        </div>
+                </li>
+                <li  class="">
+                      <div class="checkbox text-danger">
+                          <label>
+                            <input type="checkbox" value="">
+                            具有其他公司其他适当性品种交易权限
+                          </label>
+                      </div>
+        <!--            上边标签被选定则显示-->
+                      <div class="form-group">
+                            <input type="file" id="exampleInputFile" class="input_file" value="dianwo">
+                      </div>
+                </li>
+                <li>
+                    注：红色项如通过其他公司完成，请提供加盖有效印章的证明文件，并上传删除（点击可删除）
+                </li>
+            </ul>
+         </div>
+        <div class="form-group">
+            {{ form.csrf_token }}
+            <button class="btn btn-default a_width" type="submit">下一步</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

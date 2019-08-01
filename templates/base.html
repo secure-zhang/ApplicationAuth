@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>权限开通申请（客户端）</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="../static/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+
+    <style>
+      .main{box-shadow:0px 0px 5px 2px rgba(0, 0, 0, 0.35);}
+      .main a{text-decoration: none;}
+      .center{height: 800px}
+      .text-indent{text-indent:2em;}
+      .a_width{width: 100%}
+      table td{vertical-align: middle !important;}
+    </style>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container-fluid warp">
+      <div class="container main">
+<!--        页眉-->
+        <div class="row">
+          <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 text-center">
+            <small>冠通期货</small>
+          </div>
+        </div>
+        <hr>
+<!--        内容-->
+        <div class="row">
+          <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+<!--模板继承-->
+            {% block base %}
+
+            {% endblock %}
+
+<!--页面尾部-->
+          </div>
+        </div>
+<!--        下一步-->
+        <div class="row">
+          <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 text-center">
+          </div>
+        </div>
+<!--        页脚-->
+        <hr>
+        <div class="row">
+          <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 text-center">
+            <small>冠通客服电话：400-6678-656</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="../static/bootstrap-3.3.7-dist/js/jquery.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="../static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
