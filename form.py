@@ -2,17 +2,17 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, PasswordField,TextAreaField,SubmitField,validators,FileField,RadioField
 from wtforms.validators import DataRequired,Length,EqualTo
 from flask import flash
-
+from model import Application,PhoneCode
 class LoginForm(FlaskForm):
     # 用户登陆表单
-    userid = StringField(label='资金账号', validators=[DataRequired(message='资金账号不能为空')],
+    userId = StringField(label='资金账号', validators=[DataRequired(message='资金账号不能为空')],
                          render_kw={
                              'placeholder': u'资金账号'
                          }
                          )
 
-    username = StringField(label='姓名（自然人）',
-                           validators=[DataRequired(message='姓名不能为空'), Length(1, 6, message='姓名只能在2~6个字符之间')],
+    userName = StringField(label='姓名（自然人）',
+                           validators=[DataRequired(message='姓名不能为空'), Length(2, 6, message='姓名只能在2~6个字符之间')],
                            render_kw={
                                'placeholder': u'姓名（自然人）'
                            }
@@ -27,8 +27,18 @@ class LoginForm(FlaskForm):
 
     submit = SubmitField(label='下一步')
     # 验证是资金账号否存在
-    def validate_userid(self, field):
-        pass
+    def validate_userId(self, field):
+        user = Application.query.filter_by(userId=field.data).first()
+        if not user:
+            flash('账号或姓名错误请重新输入')
+            raise validators.StopValidation(u'资金账号未找到')
+        if user.userName != self.userName.data:
+            flash('账号或姓名错误请重新输入')
+            raise validators.StopValidation(u'姓名错误')
+
+
+
+
 
 
 
@@ -50,8 +60,6 @@ class ApplyForm(FlaskForm):
     files = FileField(label='文件')
     submit = SubmitField(label='下一步')
 
-class ExplainForm(FlaskForm):
-    zjs_1 = BooleanField(label='中金所1')
 
 
 
