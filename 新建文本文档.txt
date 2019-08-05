@@ -1,0 +1,28 @@
+权限开通：
+
+1. 登陆界面
+    1. 判断游湖是否已阅读
+    1. 判断input中是否填写
+    1. 使用用户账号和用户名 来判断是否存在切正确则发送验证码
+    2. 若错误则 返回错误信息
+    3. 使用ajax异步发送验证码， 讲验证码发送到客户的手机号上 60秒内生效
+    4. 输入验证码进行判断若验证码在60s内 则登陆成功,登陆成功需要使得之前验证码失效
+    5. 用户登陆之后持久化用户信息以便进行接下来的操作
+
+2. 申请界面
+
+
+zjs_1 = from.zjs_1.data
+nyzx_1 = from.nyzx_1.data
+nyzx_2 = from.nyzx_2.data
+sqs1 = from.sqs1.data
+dss1 = dss1from.dss1.data
+dss2 = from.dss2.data
+zss1 = from.zss1.data
+zss2 = from.zss2.data
+zjsbm = from.zjsbm.data
+nyzxbm = from.nyzxbm.data
+jyqx = from.jyqx.data
+jyjl = from.jyjl.data
+qtjyqx = from.qtjyqx.data
+files = from.files.data
