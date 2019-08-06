@@ -3,7 +3,6 @@
 
 <style>
     .a_width{width: 49%}
-
 </style>
 <!--        内容-->
 <h3 class="text-center lead">冠通期货交易权限开通申请系统</h3>
@@ -138,11 +137,11 @@
                           </label>
                       </div>
         <!--            上边标签被选定则显示-->
-                      <div id="file" style="display:none">
-<!--                          <input type="file">-->
-                          {{ form.files(type='file') }}
-                          仅支持图片类型
-                      </div>
+
+                    <div id="file"  style="display:none" class="form-group">
+                        {{ form.files(class="input-large",type="file",placeholder='') }}
+                        <p class="help-block">仅支持图片类型</p>
+                    </div>
                 </li>
                 <li>
                     注：红色项如通过其他公司完成，请提供加盖有效印章的证明文件，并上传删除（点击可删除）
@@ -156,7 +155,6 @@
 
 <!--            <button class="btn btn-default a_width" type="submit">下一步</button>-->
                       {{ form.submit(class='btn btn-default a_width') }}
-
 
         </div>
                   <span>{{ get_flashed_messages()[0] }}</span>

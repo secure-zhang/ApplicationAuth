@@ -1,1 +1,17 @@
-error
+{% extends 'base.html' %}
+{% block base %}
+
+<style>
+    .a_width{width: 49%}
+</style>
+<!--        内容-->
+<h3 class="text-center lead"></h3>
+<div class="center">
+
+        <div class="form-group text-center">
+            <a class="btn  btn-default a_width" href="{{ url_for('index') }}">用户登录</a>
+            <a class="btn  btn-default a_width"  href="{{ url_for('adminLogin') }}">管理员登录</a>
+        </div>
+   </div>
+
+{% endblock %}
