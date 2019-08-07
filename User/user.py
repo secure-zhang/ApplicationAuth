@@ -1,11 +1,13 @@
 # -*- conding = utf-8 -*-
 
-from __init__ import app,login_user, login_required,login_manager,logout_user
+from __init__ import app,login_manager
+from flask_login import  login_required,logout_user
 from flask import render_template, request, redirect, url_for, session, jsonify,flash
 from form import LoginForm,ApplyForm
 from datetime import timedelta
-import random,json,os
+import random,json
 from model import User,PhoneCode,Apply
+
 # 创建 user 蓝图
 from flask import Blueprint
 from werkzeug.utils import secure_filename
@@ -30,6 +32,7 @@ def load_user(user_id):
 def login():
     form = LoginForm()
     if form.validate_on_submit():
+
         # 系统判断柜台是否通过适当性测试，若已通过显示评级，若未通过，转到适当性链接
         tag = True
         if tag:
@@ -69,9 +72,6 @@ def sendCode():
         return jsonify(status_code=200, msg="发送成功")
 
     return jsonify(status_code=201, msg="账号或姓名错误请重新输入")
-
-
-
 
 # 申请表
 @app.route('/user/apply',methods=['GET','POST'])
@@ -117,13 +117,11 @@ def apply():
             flash(u'上传失败：请检查文件')
     return render_template('user/apply.html',form=form)
 
-
 # 风险说明书
 @app.route('/user/explain',methods=['GET','POST'])
 @login_required
 def explain():
     return render_template('user/explain.html')
-
 
 # 关闭界面
 @app.route('/user/success',methods=['GET','POST'])

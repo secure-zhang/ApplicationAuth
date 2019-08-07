@@ -1,6 +1,7 @@
 # -*- conding = utf-8 -*-
 
-from __init__ import app,login_user, login_required,login_manager,logout_user
+from __init__ import app,login_manager
+from flask_login import login_user, login_required,logout_user
 from flask import render_template, request, redirect, url_for, session, jsonify,flash
 from form import AdminLoginForm,QueryListForm
 from datetime import timedelta
@@ -8,7 +9,6 @@ import random,json,os
 from model import Admin,User
 # 创建 user 蓝图
 from flask import Blueprint
-
 admin = Blueprint('admin',__name__)
 
 # 这个callback函数用于reload User object，根据session中存储的user id
@@ -17,7 +17,7 @@ def load_admin_user(user_id):
     return Admin.query.get(int(user_id))
 
 # 登出
-@app.route('/admin/logout')
+@app.route('/logout')
 def adminlogout():
     logout_user()
     session.pop('adminUserId',None)
@@ -35,24 +35,24 @@ def adminLogin():
         session.permanent = True
         app.permanent_session_lifetime = timedelta(minutes=30)
         return redirect(url_for('queryList'))
-    return render_template('admin/adminLogin.html',form=form)
+    return render_template('adminLogin.html',form=form)
+
 
 
 # 用户列表分页
 @app.route('/admin/queryList',methods = ['GET', 'POST'])
-@app.route('/admin/queryList/<int:page>',methods = ['GET', 'POST'])
+@app.route('/queryList/<int:page>',methods = ['GET'])
 def queryList(page=1):
-    print(page)
     form = QueryListForm()
-    if form.validate_on_submit():
-        print(form.userId.data)
-        print(form.userName.data)
-        user = User.query.all()
-    else:
-        users = User.query.order_by(User.addTime.desc()).paginate(page,per_page=2,error_out=False)
-    return render_template('admin/queryList.html', form=form,users=users)
+    # if form.validate_on_submit():
+    #     print(form.userId.data)
+    #     print(form.userName.data)
+    #     user = User.query.all()
+    # else:
+    users = User.query.order_by(User.addTime.desc()).paginate(page,per_page=2,error_out=False)
+    return render_template('queryList.html', form=form,users=users)
 
-@app.route('/admin/queryPage',methods = ['GET', 'POST'])
+@app.route('/admin/queryPage/',methods = ['GET', 'POST'])
 def queryPage():
     item = request.args.to_dict()
     page = item.get('page','1')

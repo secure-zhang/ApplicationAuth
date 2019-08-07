@@ -1,6 +1,6 @@
 # -*- conding = utf-8 -*-
 
-from __init__ import app,login_user, login_required,login_manager,logout_user
+from __init__ import app
 from flask import render_template
 
 @app.route('/',methods=['GET','POST'])
