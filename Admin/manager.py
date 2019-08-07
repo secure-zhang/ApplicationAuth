@@ -3,7 +3,7 @@
 from __init__ import app
 from flask import render_template
 
-@app.route('/',methods=['GET','POST'])
+@app.route('/',methods=['GET'])
 def test():
     return render_template('test.html')
 
@@ -13,4 +13,4 @@ def not_found(e):
     return render_template('test.html')
 
 if __name__ == '__main__':
-    app.run()
+    app.run('192.168.1.7',5000)

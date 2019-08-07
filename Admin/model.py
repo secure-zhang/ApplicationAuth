@@ -75,3 +75,28 @@ class User(db.Model):
 
     def is_anonymous(self):
         return False
+
+class Apply(db.Model):
+    __tablename__ = 'Apply'
+    __table_args__ = {"useexisting": True}
+    id = db.Column(db.Integer(),primary_key=True,autoincrement=True)
+    userId = db.Column(db.String(64),db.ForeignKey('User.userId'), nullable=False)
+    addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
+    zjs_1 = db.Column(db.Boolean(),nullable=False,default=False)
+    nyzx_1 = db.Column(db.Boolean(),nullable=False,default=False)
+    nyzx_2 = db.Column(db.Boolean(),nullable=False,default=False)
+    sqs1 = db.Column(db.Boolean(),nullable=False,default=False)
+    dss1 = db.Column(db.Boolean(),nullable=False,default=False)
+    dss2 = db.Column(db.Boolean(),nullable=False,default=False)
+    zss1 = db.Column(db.Boolean(),nullable=False,default=False)
+    zss2 = db.Column(db.Boolean(),nullable=False,default=False)
+    zjsbm = db.Column(db.Boolean(),nullable=False,default=False)
+    nyzxbm = db.Column(db.Boolean(),nullable=False,default=False)
+    jyqx = db.Column(db.Boolean(),nullable=False,default=False)
+    jyjl = db.Column(db.Boolean(),nullable=False,default=False)
+    qtjyqx = db.Column(db.Boolean(),nullable=False,default=False)
+    fileName = db.Column(db.String(128))
+    fileData = db.Column(db.LargeBinary(length=65536))
+    def __repr__(self):
+        return '<userId %r>' % (self.userId)
+

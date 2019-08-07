@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% block base %}
+
+<style>
+    .a_width{width: 30%}
+</style>
+<!--        内容-->
+<h3 class="text-center lead">资金账号：{{item.userId}}，客户名称：{{item.userName}}</h3>
+<div class="center">
+    <form action="" method="POST" name="login" enctype="multipart/form-data">
+        <p class=" lead">申请类型：</p>
+        <table class="table table-bordered table-hover table-condensed"  >
+          <tr class="active">
+              <td>中金所</td>
+              <td>
+                  <div class="checkbox">
+                      <label>
+                          {{ form.zjs_1() }}
+                        开户申请C4
+                      </label>
+                    </div>
+              </td>
+              <td></td>
+          </tr>
+            <tr  class="active">
+              <td>能源中心</td>
+              <td>
+                  <div class="checkbox">
+                      <label>
+                          {{ form.nyzx_1() }}
+
+                        开户申请C3
+                      </label>
+                  </div>
+              </td>
+              <td>
+                  <div class="checkbox">
+                      <label>
+                          {{ form.nyzx_2() }}
+                        原油期货交易权限C4
+                      </label>
+                  </div>
+              </td>
+          </tr>
+            <tr  class="active">
+              <td>上期所</td>
+              <td>
+                   <div class="checkbox">
+                      <label>
+                          {{ form.sqs1() }}
+                        期权交易权限C4
+                      </label>
+                  </div>
+              </td>
+              <td></td>
+          </tr>
+            <tr class="active">
+              <td>大商所</td>
+              <td>
+                   <div class="checkbox">
+                      <label>
+                          {{ form.dss1() }}
+                        铁矿石期货交易权限C3
+                      </label>
+                  </div>
+              </td>
+              <td>
+                   <div class="checkbox">
+                      <label>
+                          {{ form.dss2() }}
+                        期权交易权限C4
+                      </label>
+                  </div>
+              </td>
+          </tr>
+            <tr class="active">
+              <td>郑商所</td>
+              <td>
+                   <div class="checkbox">
+                      <label>
+                           {{ form.zss1() }}
+                        PTA期货交易权限C3
+                      </label>
+                  </div>
+              </td>
+              <td>
+                   <div class="checkbox">
+                      <label>
+                          {{ form.zss2() }}
+                        期权交易权限C4
+                      </label>
+                  </div>
+              </td>
+          </tr>
+        </table>
+        <p class=" lead">权限证明文件：</p>
+        <div class="form-group">
+            <ul class="list-unstyled text-indent" >
+                <li style="margin: 0 auto">
+                      <div class="checkbox">
+                          <label>
+                              {{ form.zjsbm() }}
+                            具有中金所编码
+                          </label>
+                        </div>
+                </li>
+                <li>
+                      <div class="checkbox">
+                          <label>
+                              {{ form.nyzxbm() }}
+                            具有能源中心编码
+                          </label>
+                        </div>
+                </li>
+                <li>
+                      <div class="checkbox">
+                          <label>
+                              {{ form.jyqx() }}
+                            具有本公司其他适当性品种交易权限
+                          </label>
+                        </div>
+                </li>
+                <li>
+                      <div class="checkbox">
+                          <label>
+                              {{ form.jyjl() }}
+                            具有50个交易日交易记录（一年内）
+                          </label>
+                        </div>
+                </li>
+                <li>
+                      <div class="checkbox text-danger" >
+                          <label  >
+                              {{ form.qtjyqx(onclick="display_files()") }}
+                            具有其他公司其他适当性品种交易权限
+
+                          </label>
+                      </div>
+                </li>
+                <li>
+                    <div>
+                        {% if item.fileName %}
+                        <a href="">{{item.fileName}}</a>
+                        {% endif %}
+                    </div>
+                </li>
+            </ul>
+         </div>
+        <div class="form-group text-center">
+            {{ form.csrf_token }}
+            <a class="btn  btn-default a_width" onclick="javascript:history.back(-1);">上一步</a>
+
+            {{ form.submit(class='btn btn-default a_width') }}
+            <button class="btn btn-default a_width" type="submit">导出</button>
+
+        </div>
+                  <span>{{ get_flashed_messages()[0] }}</span>
+
+    </form>
+</div>
+<script type="text/javascript">
+
+
+
+</script>
+{% endblock %}

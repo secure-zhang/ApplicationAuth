@@ -52,3 +52,21 @@ class AdminLoginForm(FlaskForm):
         if admin:
             if not admin.check_password_hash(field.data):
                 raise validators.StopValidation(u'密码不正确')
+
+class ApplyForm(FlaskForm):
+    # 用户申请界面
+    zjs_1 = BooleanField(label='中金所1')
+    nyzx_1 = BooleanField(label='能源中心1')
+    nyzx_2 = BooleanField(label='能源中心2')
+    sqs1 = BooleanField(label='上期所1')
+    dss1 = BooleanField(label='大商所1')
+    dss2 = BooleanField(label='大商所2')
+    zss1 = BooleanField(label='郑商所1')
+    zss2 = BooleanField(label='郑商所2')
+    zjsbm = BooleanField(label='中金所编码')
+    nyzxbm = BooleanField(label='能源中心编码')
+    jyqx = BooleanField(label='交易权限')
+    jyjl = BooleanField(label='交易记录')
+    qtjyqx = BooleanField(label='其他交易权限')
+    files = FileField(label='文件',validators=[FileAllowed(['jpg', 'png'], 'Images only!')])
+    submit = SubmitField(label='下一步')

@@ -3,10 +3,10 @@
 from __init__ import app,login_manager
 from flask_login import login_user, login_required,logout_user
 from flask import render_template, request, redirect, url_for, session, jsonify,flash
-from form import AdminLoginForm,QueryListForm
+from form import AdminLoginForm,QueryListForm,ApplyForm
 from datetime import timedelta
 import random,json,os
-from model import Admin,User
+from model import Admin,User,Apply
 # 创建 user 蓝图
 from flask import Blueprint
 admin = Blueprint('admin',__name__)
@@ -35,7 +35,7 @@ def adminLogin():
         session.permanent = True
         app.permanent_session_lifetime = timedelta(minutes=30)
         return redirect(url_for('queryList'))
-    return render_template('adminLogin.html',form=form)
+    return render_template('admin/adminLogin.html',form=form)
 
 
 
@@ -44,18 +44,57 @@ def adminLogin():
 @app.route('/queryList/<int:page>',methods = ['GET'])
 def queryList(page=1):
     form = QueryListForm()
-    # if form.validate_on_submit():
-    #     print(form.userId.data)
-    #     print(form.userName.data)
-    #     user = User.query.all()
-    # else:
-    users = User.query.order_by(User.addTime.desc()).paginate(page,per_page=2,error_out=False)
-    return render_template('queryList.html', form=form,users=users)
+    if form.validate_on_submit():
+        print(form.userId.data)
+        print(form.userName.data)
+        user = User.query.all()
+    else:
+        users = User.query.order_by(User.addTime.desc()).paginate(page,per_page=2,error_out=False)
+    return render_template('admin/queryList.html', form=form,users=users)
 
-@app.route('/admin/queryPage/',methods = ['GET', 'POST'])
-def queryPage():
-    item = request.args.to_dict()
-    page = item.get('page','1')
-    if page.isdigit():
-        return redirect(url_for('queryList',page=int(page)))
-    return jsonify(status_code=403, msg="请检查page")
+
+# 用户详细信息
+
+@app.route('/apply/<string:userId>',methods=['GET'])
+def apply(userId):
+    # 记录用户名称,用户id,文件名称 返回给前端
+    item = {}
+    user = User.query.filter_by(userId=userId).first()
+    userName = user.userName
+    item['userName']=userName
+    item['userId']=userId
+    form = ApplyForm()
+    # 查询用户已提交的资料
+    apply = Apply.query.filter_by(userId=userId).first()
+    if not apply:
+        item['fileName'] = False
+        return render_template('admin/userApply.html', form=form, item=item)
+    item['fileName']=apply.fileName
+    if apply.zjs_1:
+        form.zjs_1.checked='checked'
+    if apply.nyzx_1:
+        form.nyzx_1.checked='checked'
+    if apply.nyzx_2:
+        form.nyzx_2.checked='checked'
+    if apply.sqs1:
+        form.sqs1.checked='checked'
+    if apply.dss1:
+        form.dss1.checked='checked'
+    if apply.dss2:
+        form.dss2.checked='checked'
+    if apply.zss1:
+        form.zss1.checked='checked'
+    if apply.zss2:
+        form.zss2.checked='checked'
+    if apply.zjsbm:
+        form.zjsbm.checked='checked'
+    if apply.nyzxbm:
+        form.nyzxbm.checked='checked'
+    if apply.jyqx:
+        form.jyqx.checked='checked'
+    if apply.jyjl:
+        form.jyjl.checked='checked'
+    if apply.qtjyqx:
+        form.qtjyqx.checked='checked'
+    return render_template('admin/userApply.html',form=form,item=item)
+

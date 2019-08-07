@@ -2,7 +2,6 @@ from flask import Flask
 from flask_wtf.csrf import CsrfProtect
 from flask_sqlalchemy import SQLAlchemy
 import os
-pwd = os.path.dirname(__file__)
 app = Flask(__name__)
 # app = Flask(__name__)
 
