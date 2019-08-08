@@ -5,12 +5,12 @@ from flask_login import login_user, login_required,logout_user
 from flask import render_template, request, redirect, url_for, session, jsonify,flash
 from form import AdminLoginForm,QueryListForm,ApplyForm
 from datetime import timedelta
-import random,json,os
+import random,json,os,re
 from model import Admin,User,Apply
 # 创建 user 蓝图
 from flask import Blueprint
 admin = Blueprint('admin',__name__)
-
+import base64
 # 这个callback函数用于reload User object，根据session中存储的user id
 @login_manager.user_loader
 def load_admin_user(user_id):
@@ -38,23 +38,29 @@ def adminLogin():
     return render_template('admin/adminLogin.html',form=form)
 
 
-
 # 用户列表分页
-@app.route('/admin/queryList',methods = ['GET', 'POST'])
+@app.route('/admin/queryList',methods = ['GET'])
 @app.route('/queryList/<int:page>',methods = ['GET'])
 def queryList(page=1):
+    data = request.args
+    users = User.query.order_by(User.addTime.desc()).paginate(page, per_page=2, error_out=False)
+    if data:
+        userId = data.get('userId').strip()
+        userName = data.get('userName').strip()
+
+        # # userId模糊查询
+        user = User.query.filter(User.userId.like("%" + userId + "%"),User.userName.like("%" + userName + "%"))
+        if user.all():
+            users = user.paginate(page,per_page=2,error_out=False)
+        else:
+            flash('资金账号: %s 客户名称: %s 未查询到'%(userId,userName))
+
     form = QueryListForm()
-    if form.validate_on_submit():
-        print(form.userId.data)
-        print(form.userName.data)
-        user = User.query.all()
-    else:
-        users = User.query.order_by(User.addTime.desc()).paginate(page,per_page=2,error_out=False)
     return render_template('admin/queryList.html', form=form,users=users)
 
 
-# 用户详细信息
 
+# 用户详细信息
 @app.route('/apply/<string:userId>',methods=['GET'])
 def apply(userId):
     # 记录用户名称,用户id,文件名称 返回给前端
@@ -64,12 +70,16 @@ def apply(userId):
     item['userName']=userName
     item['userId']=userId
     form = ApplyForm()
+
     # 查询用户已提交的资料
     apply = Apply.query.filter_by(userId=userId).first()
     if not apply:
         item['fileName'] = False
         return render_template('admin/userApply.html', form=form, item=item)
-    item['fileName']=apply.fileName
+
+    if apply.fileName:
+        item['fileName']=apply.fileName
+        item['fileData']= re.match("b'(.*?)'",str(apply.fileData)).group(1)
     if apply.zjs_1:
         form.zjs_1.checked='checked'
     if apply.nyzx_1:
@@ -96,5 +106,5 @@ def apply(userId):
         form.jyjl.checked='checked'
     if apply.qtjyqx:
         form.qtjyqx.checked='checked'
-    return render_template('admin/userApply.html',form=form,item=item)
+    return render_template('admin/userApply.html',form=form,item=item,base64=base64)
 

@@ -13,4 +13,4 @@ def not_found(e):
     return render_template('test.html')
 
 if __name__ == '__main__':
-    app.run('192.168.1.7',5000)
+    app.run()

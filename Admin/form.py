@@ -9,21 +9,24 @@ from flask_login import login_user
 
 class QueryListForm(FlaskForm):
     # 用户登陆表单
-    userId = StringField(label='资金账号', validators=[DataRequired(message='资金账号不能为空')],
+    userId = StringField(label='资金账号',
                          render_kw={
                              'placeholder': u'资金账号'
                          }
                          )
 
     userName = StringField(label='客户名称',
-                           validators=[DataRequired(message='姓名不能为空'), Length(2, 6, message='姓名只能在2~6个字符之间')],
                            render_kw={
                                'placeholder': u'客户名称'
                            }
                            )
 
 
-    submit = SubmitField(label='查询')
+
+
+
+
+
 
 class AdminLoginForm(FlaskForm):
     # 用户登陆表单
@@ -68,5 +71,4 @@ class ApplyForm(FlaskForm):
     jyqx = BooleanField(label='交易权限')
     jyjl = BooleanField(label='交易记录')
     qtjyqx = BooleanField(label='其他交易权限')
-    files = FileField(label='文件',validators=[FileAllowed(['jpg', 'png'], 'Images only!')])
-    submit = SubmitField(label='下一步')
+    submit = SubmitField(label='通过')

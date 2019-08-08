@@ -11,6 +11,7 @@ from model import User,PhoneCode,Apply
 # 创建 user 蓝图
 from flask import Blueprint
 from werkzeug.utils import secure_filename
+import base64
 
 user = Blueprint('user',__name__)
 
@@ -95,11 +96,10 @@ def apply():
         qtjyqx =form.qtjyqx.data
         files =form.files.data
         if files:
-
             # 针对文件名称进行处理
             fileName = secure_filename(files.filename)
             # 获取二进制的文件
-            fileData = files.read()
+            fileData =base64.b64encode(files.read())
             # 保存在本地
             # files.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             ap = Apply(userId=userId,zjs_1=zjs_1,nyzx_1=nyzx_1,nyzx_2=nyzx_2,sqs1=sqs1,dss1=dss1,
