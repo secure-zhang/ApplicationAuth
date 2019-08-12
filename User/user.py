@@ -68,7 +68,7 @@ def sendCode():
         code = random.randint(0, 999999)
         pc = PhoneCode(userId=userId,code=code)
         pc.add()
-        return jsonify(status_code=200, msg="发送成功")
+        return jsonify(status_code=200, msg="发送成功 code%s"%code)
     return jsonify(status_code=404, msg="账号或姓名错误")
 
 # 申请表

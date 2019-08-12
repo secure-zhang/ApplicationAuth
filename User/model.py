@@ -97,8 +97,9 @@ class UserImage(db.Model):
         return '<userId %r>' % (self.userId)
 if __name__ == '__main__':
     # db.create_all()
-    # a = User(userId='root2',userName='test',phone='17635035787',addTime=datetime.now())
-    # db.session.add(a)
+    a = User(userId='root2123',userName='test',phone='17635035787')
+    a = db.session.add(a)
+    print(a)
     # a = Admin(adminUserId='root',password='1')
     # a.add()
     # a = PhoneCode.query.filter_by(userId='root').first()

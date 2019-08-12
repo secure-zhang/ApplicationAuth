@@ -21,14 +21,14 @@ def load_admin_user(user_id):
 def adminlogout():
     logout_user()
     session.pop('adminUserId',None)
-    return redirect(url_for('index'))
+    session.pop('tag',None)
+    return redirect(url_for('adminLogin'))
 
 # 登陆界面
 @app.route('/admin/login',methods=['GET','POST'])
 def adminLogin():
     form = AdminLoginForm()
     if form.validate_on_submit():
-        session['adminUserId'] = form.adminUserId.data
         session.permanent = True
         app.permanent_session_lifetime = timedelta(minutes=30)
         return redirect(url_for('queryList'))
@@ -156,9 +156,26 @@ def changePassword():
         flash('修改成功')
     return render_template('admin/changePassword.html',form=form,item=item)
 
-@app.route('/admin/administrator',methods=['GET','POST'])
-# @login_required
-def administrator():
+@app.route('/admin/adminRegister',methods=['GET','POST'])
+@login_required
+def adminRegister():
+    # 判断是否为超级管理员
+    if not session['tag']:
+        abort(404)
+
     item = {}
     form = RegisterForm()
-    return render_template('admin/Administrator.html',form=form,item=item)
+    if form.validate_on_submit():
+        adminUserId = form.adminUserId.data
+        password = form.password.data
+        jurisdiction = json.dumps({'data':form.jurisdiction.data})
+        admin = Admin.query.filter_by(adminUserId=adminUserId).first()
+        if admin:
+            admin.password = password
+            admin.jurisdiction = jurisdiction
+        else:
+            a = Admin(adminUserId=adminUserId,password=password,jurisdiction=jurisdiction)
+            db.session.add(a)
+        db.session.commit()
+        flash('角色: %s 已重置'%adminUserId)
+    return render_template('admin/adminRegister.html',form=form,item=item)

@@ -46,6 +46,9 @@ class AdminLoginForm(FlaskForm):
         if not admin.check_password_hash(self.password.data):
             raise validators.StopValidation(u'密码不正确')
         login_user(admin)
+        session['adminUserId'] = field.data
+        session['tag'] = admin.tag
+
 
 class ApplyForm(FlaskForm):
     # 用户申请界面
@@ -115,7 +118,7 @@ class RegisterForm(FlaskForm):
                               }
                            )
     password = PasswordField(label='角色密码',
-                             validators=[DataRequired(message='密码不能为空'), Length(1, 20, message='密码只能在6~20个字符之间')],
+                             validators=[DataRequired(message='密码不能为空'), Length(2, 20, message='密码只能在6~20个字符之间')],
                              render_kw={
                                  'placeholder': u'请输入角色密码'
                              }

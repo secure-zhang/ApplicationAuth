@@ -43,21 +43,29 @@
               <ul class="nav navbar-nav">
                 <li ><a href="{{ url_for('queryList') }}">用户申请</a></li>
                 <li ><a href="{{ url_for('changePassword') }}">密码修改</a></li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">管理员账户 <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li ><a href="{{ url_for('administrator') }}">角色设置</a></li>
-                    <li><a href="#">协议维护</a></li>
+                {% if session.tag%}
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">管理员账户 <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li ><a href="{{ url_for('adminRegister') }}">角色设置</a></li>
+                        <li><a href="#">协议维护</a></li>
+                      </ul>
+                    </li>
+                  {% endif %}
+
+              </ul>
+
+                {% if session.adminUserId %}
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">当前登录: {{session.adminUserId}} <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                          <li ><a href="{{ url_for('adminlogout') }}">注销</a></li>
+                      </ul>
+                    </li>
                   </ul>
-                </li>
-              </ul>
-              <ul class="nav navbar-nav navbar-right">
-                <li>
-                    {% if session.adminUserId %}
-                        <p class="navbar-text">当前登录: {{session.adminUserId}}</p>
-                    {% endif %}
-                </li>
-              </ul>
+                {% endif %}
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
         </nav>

@@ -11,9 +11,11 @@ class Admin(UserMixin,db.Model):
     id = db.Column(db.Integer(),primary_key=True,autoincrement=True)
     adminUserId = db.Column(db.String(64),nullable=False)
     password_hash = db.Column(db.String(256),nullable=False)
-
+    jurisdiction = db.Column(db.String(256),nullable=False)
+    addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
+    tag = db.Column(db.Boolean(),nullable=False,default=False)
     def __str__(self):
-        return 'User{adminUserId=%s,password=%s,}' % (self.adminUserId, self.password,)
+        return 'User{adminUserId=%s}' % (self.adminUserId)
 
     @property
     def password(self):
@@ -50,8 +52,7 @@ class Admin(UserMixin,db.Model):
         except:
             return 0
 
-    def __repr__(self):
-        return '<User %r>' % (self.id)
+
 class User(db.Model):
     __tablename__ = 'User'
     __table_args__ = {"useexisting": True}
@@ -64,17 +65,6 @@ class User(db.Model):
     addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     def __str__(self):
         return 'Application{userId=%s,userName=%s,phone=%s,}' % (self.userId, self.userName, self.phone)
-    def get_id(self):
-        return unicode(self.id)
-
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
 
 class UserData(db.Model):
     __tablename__ = 'UserData'
@@ -107,3 +97,8 @@ class UserImage(db.Model):
     fileData = db.Column(db.LargeBinary(length=65536))
     def __repr__(self):
         return '<User %r>' % (self.userId)
+
+# if __name__ == '__main__':
+#     # db.create_all()
+#     a = Admin()
+#     db.session.add(a)

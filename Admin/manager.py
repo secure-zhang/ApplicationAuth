@@ -9,6 +9,7 @@ def test():
 
 # 异常处理
 @app.errorhandler(400)
+@app.errorhandler(404)
 def not_found(e):
     return render_template('test.html')
 
