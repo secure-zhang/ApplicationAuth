@@ -1,25 +1,25 @@
 {% extends 'base.html' %}
 {% block base %}
 <!--        内容-->
-<h3 class="text-center lead">冠通期货交易权限开通申请系统</h3>
 <div class="center">
   <form action="{{ url_for('adminLogin') }}" method="post" name="login">
 
-      <div class="form-group">
+      <div class="form-group  col-xs-12  col-sm-4 col-sm-offset-4">
           {{ form.adminUserId(class='form-control',id='adminUserId',required=required) }}
       </div>
 
-      <div class="form-group">
+      <div class="form-group  col-xs-12  col-sm-4 col-sm-offset-4">
           {{ form.password(class='form-control',id='password',required=required) }}
       </div>
 
-      <div class="form-group">
+      <div class="form-group  col-xs-12  col-sm-4 col-sm-offset-4">
           <div>{{ form.csrf_token(id='token') }}</div>
-          {{ form.submit(class='btn btn-default a_width') }}
+          {{ form.submit(class='btn btn-primary a_width') }}
           <span>{{ get_flashed_messages()[0] }}</span>
       </div>
-      <div class="form-group">
-          <p style="color: red">
+
+      <div class="form-group  col-xs-12  col-sm-4 col-sm-offset-4">
+          <p class="text-danger text-center ">
             {% if get_flashed_messages() %}
                 <span>{{ get_flashed_messages()[0] }}</span>
             {% elif  form.adminUserId.errors%}

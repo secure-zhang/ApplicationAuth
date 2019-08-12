@@ -5,23 +5,21 @@
     .a_width{width: 49%}
 </style>
 <!--        内容-->
-<h3 class="text-center lead"></h3>
 <div class="center">
       <form action="{{ url_for('success') }}" method="get" name="login">
-        <div class="">
+          <div class="">
             <ol>
-              <li>期货交易风险说明书</li>
-              <li>合规诚信承诺函</li>
+                <li>期货交易风险说明书</li>
+                <li>合规诚信承诺函</li>
             </ol>
-            <div class="col-sm-offset-2 col-sm-10 ">
-          <div class="checkbox">
-            <label>
-                <input type="checkbox" required=required>
-                本人/本单位已阅读以上协议并充分了解期货、期权交易知识及风险
-            </label>
           </div>
-      </div>
-        </div>
+          <hr>
+          <div class="checkbox" style="margin-left: 20px">
+                <label>
+                    <input type="checkbox" required=required>
+                    本人/本单位已阅读以上协议并充分了解期货、期权交易知识及风险
+                </label>
+            </div>
         <div class="text-center">
             <a class="btn  btn-default a_width" onclick="javascript:history.back(-1);">上一步</a>
             <button type="submit" class="btn btn-default a_width">下一步</button>

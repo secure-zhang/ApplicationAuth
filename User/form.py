@@ -36,25 +36,18 @@ class LoginForm(FlaskForm):
     submit = SubmitField(label='下一步')
     # 验证是资金账号否存在
     def validate_userId(self, field):
+
         if not self.userId.data or not self.userName.data or not self.code.data or not self.read_old.data:
             flash('请正确填写信息')
             raise validators.StopValidation(u'请正确填写信息')
 
-        user = User.query.filter_by(userId=field.data).first()
+        user = User.query.filter_by(userId=field.data,userName=self.userName.data.strip()).first()
         if not user:
             flash('账号或姓名错误请重新输入')
             raise validators.StopValidation(u'资金账号未找到')
-        if user.userName != self.userName.data.strip() :
-            flash('账号或姓名错误请重新输入')
-            raise validators.StopValidation(u'姓名错误')
-        pc = PhoneCode.query.filter_by(userId=field.data).order_by(PhoneCode.addTime.desc()).first()
-        if not pc:
-            # 判断验证码是否存在
-            flash('请刷新重试')
-            raise validators.StopValidation(u'请刷新重试')
 
-        # 判断验证码是否正确
-        if self.code.data != pc.code :
+        pc = PhoneCode.query.filter_by(userId=field.data,code=self.code.data.strip()).order_by(PhoneCode.addTime.desc()).first()
+        if not pc:
             flash('验证码错误')
             raise validators.StopValidation(u'验证码错误')
 

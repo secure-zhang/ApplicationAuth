@@ -51,7 +51,7 @@ class Admin(UserMixin,db.Model):
             return 0
 
     def __repr__(self):
-        return '<User %r>' % (self.name)
+        return '<User %r>' % (self.id)
 class User(db.Model):
     __tablename__ = 'User'
     __table_args__ = {"useexisting": True}
@@ -60,7 +60,7 @@ class User(db.Model):
     userName = db.Column(db.String(64),nullable=False)
     phone = db.Column(db.String(11),nullable=False)
     isHandle = db.Column(db.Boolean(),nullable=False,default=False)
-    handleName = db.Column(db.String(11),nullable=False,default='暂无')
+    handleName = db.Column(db.String(11),nullable=False,default='无')
     addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     def __str__(self):
         return 'Application{userId=%s,userName=%s,phone=%s,}' % (self.userId, self.userName, self.phone)
@@ -76,8 +76,8 @@ class User(db.Model):
     def is_anonymous(self):
         return False
 
-class Apply(db.Model):
-    __tablename__ = 'Apply'
+class UserData(db.Model):
+    __tablename__ = 'UserData'
     __table_args__ = {"useexisting": True}
     id = db.Column(db.Integer(),primary_key=True,autoincrement=True)
     userId = db.Column(db.String(64),db.ForeignKey('User.userId'), nullable=False)
@@ -95,8 +95,15 @@ class Apply(db.Model):
     jyqx = db.Column(db.Boolean(),nullable=False,default=False)
     jyjl = db.Column(db.Boolean(),nullable=False,default=False)
     qtjyqx = db.Column(db.Boolean(),nullable=False,default=False)
+    def __repr__(self):
+        return '<User %r>' % (self.userId)
+class UserImage(db.Model):
+    __tablename__ = 'UserImage'
+    __table_args__ = {"useexisting": True}
+    id = db.Column(db.Integer(),primary_key=True,autoincrement=True)
+    userId = db.Column(db.String(64),db.ForeignKey('User.userId'), nullable=False)
+    addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     fileName = db.Column(db.String(128))
     fileData = db.Column(db.LargeBinary(length=65536))
     def __repr__(self):
-        return '<userId %r>' % (self.userId)
-
+        return '<User %r>' % (self.userId)

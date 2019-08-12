@@ -2,11 +2,11 @@
 
 from __init__ import app,login_manager
 from flask_login import  login_required,logout_user
-from flask import render_template, request, redirect, url_for, session, jsonify,flash
+from flask import render_template, request, redirect, url_for, session, jsonify,flash,abort
 from form import LoginForm,ApplyForm
 from datetime import timedelta
 import random,json
-from model import User,PhoneCode,Apply
+from model import User,PhoneCode,UserData,UserImage
 
 # 创建 user 蓝图
 from flask import Blueprint
@@ -22,8 +22,7 @@ def index():
     return render_template('user/index.html')
 
 
-# 这个callback函数用于reload User object，根据session中存储的user id
-# 用户登陆
+# 这个callback函数用于reload User object
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -33,7 +32,6 @@ def load_user(user_id):
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-
         # 系统判断柜台是否通过适当性测试，若已通过显示评级，若未通过，转到适当性链接
         tag = True
         if tag:
@@ -50,8 +48,8 @@ def login():
 @app.route('/user/logout')
 def logout():
     logout_user()
-    session.pop('username',None)
-    session.pop('user_id',None)
+    session.pop('userName',None)
+    session.pop('userId',None)
     return redirect(url_for('index'))
 
 
@@ -71,8 +69,7 @@ def sendCode():
         pc = PhoneCode(userId=userId,code=code)
         pc.add()
         return jsonify(status_code=200, msg="发送成功")
-
-    return jsonify(status_code=201, msg="账号或姓名错误请重新输入")
+    return jsonify(status_code=404, msg="账号或姓名错误")
 
 # 申请表
 @app.route('/user/apply',methods=['GET','POST'])
@@ -95,30 +92,30 @@ def apply():
         jyjl =form.jyjl.data
         qtjyqx =form.qtjyqx.data
         files =form.files.data
-        if files:
-            # 针对文件名称进行处理
-            fileName = secure_filename(files.filename)
-            # 获取二进制的文件
-            fileData =base64.b64encode(files.read())
-            # 保存在本地
-            # files.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            ap = Apply(userId=userId,zjs_1=zjs_1,nyzx_1=nyzx_1,nyzx_2=nyzx_2,sqs1=sqs1,dss1=dss1,
-                      dss2=dss2,zss1=zss1,zss2=zss2,zjsbm=zjsbm,nyzxbm=nyzxbm,jyqx=jyqx,jyjl=jyjl,
-                      qtjyqx=qtjyqx,fileName=fileName,fileData=fileData)
-        else:
-            ap = Apply(userId=userId,zjs_1=zjs_1,nyzx_1=nyzx_1,nyzx_2=nyzx_2,sqs1=sqs1,dss1=dss1,
-                      dss2=dss2,zss1=zss1,zss2=zss2,zjsbm=zjsbm,nyzxbm=nyzxbm,jyqx=jyqx,jyjl=jyjl,
-                      qtjyqx=qtjyqx)
-        tag = ap.add()
-        if tag:
-            flash(u'上传成功')
-            return redirect(url_for('explain'))
-        else:
+        try:
+            data = UserData(userId=userId, zjs_1=zjs_1, nyzx_1=nyzx_1, nyzx_2=nyzx_2, sqs1=sqs1, dss1=dss1,
+                          dss2=dss2, zss1=zss1, zss2=zss2, zjsbm=zjsbm, nyzxbm=nyzxbm, jyqx=jyqx, jyjl=jyjl,
+                          qtjyqx=qtjyqx)
+            tag2 = True
+            if files:
+                # 针对文件名称进行处理
+                fileName = secure_filename(files.filename)
+                # 获取二进制的文件
+                fileData =base64.b64encode(files.read())
+
+                img = UserImage(userId=userId,fileName=fileName,fileData=fileData)
+                tag2 = img.add()
+            tag1 = data.add()
+            if tag1 and tag2:
+                flash(u'上传成功')
+                return redirect(url_for('explain'))
+        except:
             flash(u'上传失败：请检查文件')
+            # abort(404)
     return render_template('user/apply.html',form=form)
 
 # 风险说明书
-@app.route('/user/explain',methods=['GET','POST'])
+@app.route('/user/explain',methods=['GET'])
 @login_required
 def explain():
     return render_template('user/explain.html')
