@@ -10,7 +10,7 @@ class User(db.Model):
     userId = db.Column(db.String(64),nullable=False,unique=True)
     userName = db.Column(db.String(64),nullable=False)
     phone = db.Column(db.String(11),nullable=False)
-    isHandle = db.Column(db.Boolean(),nullable=False,default=False)
+    isHandle = db.Column(db.Integer(),nullable=False,default=2)
     handleName = db.Column(db.String(11),nullable=False,default='无')
     userClass = db.Column(db.String(64),nullable=False)
     addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
@@ -97,15 +97,15 @@ class UserImage(db.Model):
     def __repr__(self):
         return '<userId %r>' % (self.userId)
 if __name__ == '__main__':
-    db.create_all()
-    # a = User(userId='root2123',userName='test',phone='17635035787')
+    # db.create_all()
+    # a = User(userId='root1',userName='root1',phone='176',userClass='1')
     # a = db.session.add(a)
     # print(a)
     # a = Admin(adminUserId='root',password='1')
     # a.add()
     # a = PhoneCode.query.filter_by(userId='root').first()
     # db.session.delete(a)
-    # db.session.commit()
+    db.session.commit()
     pass
 
 
