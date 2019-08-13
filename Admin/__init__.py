@@ -26,7 +26,9 @@ login_manager.init_app(app=app)
 
 
 # 指定数据库的链接信息
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://zhang:zhang@94.191.80.61:3306/Application'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pymssql://gt:server123!@#@172.0.10.59/GtPowerManage'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://zhang:zhang@94.191.80.61:3306/Application'
+
 # 这个配置将来会被禁用,设置为True或者False可以解除警告信息,建议设置False
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)

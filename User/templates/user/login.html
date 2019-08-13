@@ -61,6 +61,7 @@
                 success:function(res){
                     // debugger;
                     if(res.status_code == 200){
+                            alert(res.msg);
                             sleep(code,60);
                     }else{
                     alert("验证码发送失败");

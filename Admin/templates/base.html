@@ -11,10 +11,9 @@
     <link rel="stylesheet" href="../static/bootstrap-3.3.7-dist/css/bootstrap.min.css">
 
     <style>
-        .header .navbar{background-color: #1b6d85;height: 45px;}
-        .header .navbar-header a{color: rgba(255,255,255,.7);font-size: 25px}
-        .header .navbar li a{color: #0C0C0C}
-        .header .navbar li p{color: #0C0C0C}
+        .navbar{background-color: #1b6d85}
+        .logo{font-size: 25px ;color: #9d9d9d !important}
+     .navbar ul li a{color: #222222 !important; font-size: 16px}
       .main a{text-decoration: none;}
       .text-indent{text-indent:2em;}
       .a_width{width: 100%}
@@ -24,7 +23,6 @@
   </head>
   <body>
   <!--    导航条-->
-    <div class="header">
         <nav class="navbar navbar-default">
           <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -35,33 +33,41 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="#">Gt Futures</a>
+              <a class="navbar-brand logo" href="">Gt Futures</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav">
-                <li ><a href="{{ url_for('queryList') }}">用户申请</a></li>
-                <li ><a href="{{ url_for('changePassword') }}">密码修改</a></li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">管理员账户 <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li ><a href="{{ url_for('administrator') }}">角色设置</a></li>
-                    <li><a href="#">协议维护</a></li>
+                <li ><a href="{{ url_for('userList') }}">用户申请</a></li>
+                <li ><a href="{{ url_for('adminPassword') }}">密码修改</a></li>
+                {% if session.tag%}
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">管理员账户 <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li ><a href="{{ url_for('adminRegister') }}">角色设置</a></li>
+                        <li><a href="#">协议维护</a></li>
+                      </ul>
+                    </li>
+                  {% endif %}
+
+              </ul>
+
+                {% if session.adminUserId %}
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">当前登录: {{session.adminUserId}} <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                          <li ><a href="{{ url_for('adminlogout') }}">注销</a></li>
+                      </ul>
+                    </li>
                   </ul>
-                </li>
-              </ul>
-              <ul class="nav navbar-nav navbar-right">
-                <li>
-                    {% if session.adminUserId %}
-                        <p class="navbar-text">当前登录: {{session.adminUserId}}</p>
-                    {% endif %}
-                </li>
-              </ul>
+                {% endif %}
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
         </nav>
-        </div>
+
   <!--    内容-->
     <div id="pdfContainer" class="container-fluid warp">
       <div class="container main">

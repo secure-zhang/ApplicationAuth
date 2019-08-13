@@ -11,9 +11,11 @@ class Admin(UserMixin,db.Model):
     id = db.Column(db.Integer(),primary_key=True,autoincrement=True)
     adminUserId = db.Column(db.String(64),nullable=False)
     password_hash = db.Column(db.String(256),nullable=False)
-
+    jurisdiction = db.Column(db.String(256),nullable=False)
+    addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
+    tag = db.Column(db.Boolean(),nullable=False,default=False)
     def __str__(self):
-        return 'User{adminUserId=%s,password=%s,}' % (self.adminUserId, self.password,)
+        return 'User{adminUserId=%s}' % (self.adminUserId)
 
     @property
     def password(self):
@@ -50,8 +52,7 @@ class Admin(UserMixin,db.Model):
         except:
             return 0
 
-    def __repr__(self):
-        return '<User %r>' % (self.id)
+
 class User(db.Model):
     __tablename__ = 'User'
     __table_args__ = {"useexisting": True}
@@ -64,17 +65,6 @@ class User(db.Model):
     addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     def __str__(self):
         return 'Application{userId=%s,userName=%s,phone=%s,}' % (self.userId, self.userName, self.phone)
-    def get_id(self):
-        return unicode(self.id)
-
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
 
 class UserData(db.Model):
     __tablename__ = 'UserData'
@@ -82,19 +72,19 @@ class UserData(db.Model):
     id = db.Column(db.Integer(),primary_key=True,autoincrement=True)
     userId = db.Column(db.String(64),db.ForeignKey('User.userId'), nullable=False)
     addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
-    zjs_1 = db.Column(db.Boolean(),nullable=False,default=False)
-    nyzx_1 = db.Column(db.Boolean(),nullable=False,default=False)
-    nyzx_2 = db.Column(db.Boolean(),nullable=False,default=False)
-    sqs1 = db.Column(db.Boolean(),nullable=False,default=False)
-    dss1 = db.Column(db.Boolean(),nullable=False,default=False)
-    dss2 = db.Column(db.Boolean(),nullable=False,default=False)
-    zss1 = db.Column(db.Boolean(),nullable=False,default=False)
-    zss2 = db.Column(db.Boolean(),nullable=False,default=False)
-    zjsbm = db.Column(db.Boolean(),nullable=False,default=False)
-    nyzxbm = db.Column(db.Boolean(),nullable=False,default=False)
-    jyqx = db.Column(db.Boolean(),nullable=False,default=False)
-    jyjl = db.Column(db.Boolean(),nullable=False,default=False)
-    qtjyqx = db.Column(db.Boolean(),nullable=False,default=False)
+    cffex_c4 = db.Column(db.Boolean(),nullable=False,default=False)
+    ine_c3 = db.Column(db.Boolean(),nullable=False,default=False)
+    ine_c4 = db.Column(db.Boolean(),nullable=False,default=False)
+    shfe_c4 = db.Column(db.Boolean(),nullable=False,default=False)
+    dce_c3 = db.Column(db.Boolean(),nullable=False,default=False)
+    dce_c4 = db.Column(db.Boolean(),nullable=False,default=False)
+    czce_c3 = db.Column(db.Boolean(),nullable=False,default=False)
+    czce_c4 = db.Column(db.Boolean(),nullable=False,default=False)
+    cffex_code = db.Column(db.Boolean(),nullable=False,default=False)
+    ine_code = db.Column(db.Boolean(),nullable=False,default=False)
+    company_auth = db.Column(db.Boolean(),nullable=False,default=False)
+    transact_record = db.Column(db.Boolean(),nullable=False,default=False)
+    outher_com_auth = db.Column(db.Boolean(),nullable=False,default=False)
     def __repr__(self):
         return '<User %r>' % (self.userId)
 class UserImage(db.Model):
@@ -107,3 +97,8 @@ class UserImage(db.Model):
     fileData = db.Column(db.LargeBinary(length=65536))
     def __repr__(self):
         return '<User %r>' % (self.userId)
+
+if __name__ == '__main__':
+    db.create_all()
+#     a = Admin()
+#     db.session.add(a)

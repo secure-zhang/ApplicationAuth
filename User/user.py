@@ -68,7 +68,7 @@ def sendCode():
         code = random.randint(0, 999999)
         pc = PhoneCode(userId=userId,code=code)
         pc.add()
-        return jsonify(status_code=200, msg="发送成功")
+        return jsonify(status_code=200, msg="%s"%code)
     return jsonify(status_code=404, msg="账号或姓名错误")
 
 # 申请表
@@ -78,24 +78,24 @@ def apply():
     form = ApplyForm()
     if form.validate_on_submit():
         userId = session['userId']
-        zjs_1 =form.zjs_1.data
-        nyzx_1 =form.nyzx_1.data
-        nyzx_2 =form.nyzx_2.data
-        sqs1 =form.sqs1.data
-        dss1 = form.dss1.data
-        dss2 =form.dss2.data
-        zss1 =form.zss1.data
-        zss2 =form.zss2.data
-        zjsbm =form.zjsbm.data
-        nyzxbm =form.nyzxbm.data
-        jyqx =form.jyqx.data
-        jyjl =form.jyjl.data
-        qtjyqx =form.qtjyqx.data
+        cffex_c4 =form.cffex_c4.data
+        ine_c3 =form.ine_c3.data
+        ine_c4 =form.ine_c4.data
+        shfe_c4 =form.shfe_c4.data
+        dce_c3 = form.dce_c3.data
+        dce_c4 =form.dce_c4.data
+        czce_c3 =form.czce_c3.data
+        czce_c4 =form.czce_c4.data
+        cffex_code =form.cffex_code.data
+        ine_code =form.ine_code.data
+        company_auth =form.company_auth.data
+        transact_record =form.transact_record.data
+        outher_com_auth =form.outher_com_auth.data
         files =form.files.data
         try:
-            data = UserData(userId=userId, zjs_1=zjs_1, nyzx_1=nyzx_1, nyzx_2=nyzx_2, sqs1=sqs1, dss1=dss1,
-                          dss2=dss2, zss1=zss1, zss2=zss2, zjsbm=zjsbm, nyzxbm=nyzxbm, jyqx=jyqx, jyjl=jyjl,
-                          qtjyqx=qtjyqx)
+            data = UserData(userId=userId, cffex_c4=cffex_c4, ine_c3=ine_c3, ine_c4=ine_c4, shfe_c4=shfe_c4, dce_c3=dce_c3,
+                          dce_c4=dce_c4, czce_c3=czce_c3, czce_c4=czce_c4, cffex_code=cffex_code, ine_code=ine_code, company_auth=company_auth, transact_record=transact_record,
+                          outher_com_auth=outher_com_auth)
             tag2 = True
             if files:
                 # 针对文件名称进行处理

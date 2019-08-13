@@ -46,22 +46,25 @@ class AdminLoginForm(FlaskForm):
         if not admin.check_password_hash(self.password.data):
             raise validators.StopValidation(u'密码不正确')
         login_user(admin)
+        session['adminUserId'] = field.data
+        session['tag'] = admin.tag
+
 
 class ApplyForm(FlaskForm):
     # 用户申请界面
-    zjs_1 = BooleanField(label='中金所1')
-    nyzx_1 = BooleanField(label='能源中心1')
-    nyzx_2 = BooleanField(label='能源中心2')
-    sqs1 = BooleanField(label='上期所1')
-    dss1 = BooleanField(label='大商所1')
-    dss2 = BooleanField(label='大商所2')
-    zss1 = BooleanField(label='郑商所1')
-    zss2 = BooleanField(label='郑商所2')
-    zjsbm = BooleanField(label='中金所编码')
-    nyzxbm = BooleanField(label='能源中心编码')
-    jyqx = BooleanField(label='交易权限')
-    jyjl = BooleanField(label='交易记录')
-    qtjyqx = BooleanField(label='其他交易权限')
+    cffex_c4 = BooleanField(label='中金所1')
+    ine_c3 = BooleanField(label='能源中心1')
+    ine_c4 = BooleanField(label='能源中心2')
+    shfe_c4 = BooleanField(label='上期所1')
+    dce_c3 = BooleanField(label='大商所1')
+    dce_c4 = BooleanField(label='大商所2')
+    czce_c3 = BooleanField(label='郑商所1')
+    czce_c4 = BooleanField(label='郑商所2')
+    cffex_code = BooleanField(label='中金所编码')
+    ine_code = BooleanField(label='能源中心编码')
+    company_auth = BooleanField(label='交易权限')
+    transact_record = BooleanField(label='交易记录')
+    outher_com_auth = BooleanField(label='其他交易权限')
     submit = SubmitField(label='通过')
 
 
@@ -115,7 +118,7 @@ class RegisterForm(FlaskForm):
                               }
                            )
     password = PasswordField(label='角色密码',
-                             validators=[DataRequired(message='密码不能为空'), Length(1, 20, message='密码只能在6~20个字符之间')],
+                             validators=[DataRequired(message='密码不能为空'), Length(2, 20, message='密码只能在6~20个字符之间')],
                              render_kw={
                                  'placeholder': u'请输入角色密码'
                              }
