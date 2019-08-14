@@ -52,6 +52,36 @@ def userList(page=1):
             users = User.query.filter(User.userId.like("%" + userId + "%"), User.userName.like("%" + userName + "%")).paginate(page, per_page=5, error_out=False)
     return render_template('admin/userList.html', form=form,users=users)
 
+# 用户列表ajax分页
+@app.route('/admin/userTest',methods = ['GET'])
+@app.route('/userTest',methods = ['GET'])
+def userTest(page=1,userId='',userName=''):
+    form = QueryListForm()
+    data = request.args
+    users = User.query.order_by(User.addTime.desc()).paginate(page, per_page=3, error_out=False)
+    item = {}
+    # 如果是通过submit 提交则从url中获取数据
+    if data:
+        userId = data.get('userId').strip()
+        userName = data.get('userName').strip()
+        page = int(data.get('page','1').strip())
+        # 将表单中的数据赋值给表单
+        if userId:
+            form.userId.render_kw = {
+                'value': userId
+            }
+        if userName:
+            form.userName.render_kw = {
+                'value': userName
+            }
+        # 若提交的时候没用参数则查全部数据按照添加时间进行排序,否则按照字段进行模糊查询
+        if not userId and not userName:
+            users = User.query.order_by(User.addTime.desc()).paginate(page, per_page=3, error_out=False)
+        if  userId or  userName:
+            users = User.query.filter(User.userId.like("%" + userId + "%"), User.userName.like("%" + userName + "%")).order_by(User.addTime.desc()).paginate(page, per_page=3, error_out=False)
+    item['userId'] = userId
+    item['userName'] = userName
+    return render_template('admin/userTest.html', form=form,users=users,item=item)
 
 
 # 用户详细信息

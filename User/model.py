@@ -98,8 +98,9 @@ class UserImage(db.Model):
         return '<userId %r>' % (self.userId)
 if __name__ == '__main__':
     # db.create_all()
-    # a = User(userId='root1',userName='root1',phone='176',userClass='1')
+    # a = User(userId='123',userName='q',phone='176',userClass='1')
     # a = db.session.add(a)
+
     # print(a)
     # a = Admin(adminUserId='root',password='1')
     # a.add()
