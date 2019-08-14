@@ -35,30 +35,14 @@ def adminLogin():
     return render_template('admin/adminLogin.html',form=form)
 
 
-# 用户列表分页
-@app.route('/admin/userList',methods = ['GET'])
-@app.route('/userList/<int:page>',methods = ['GET'])
-@login_required
-def userList(page=1):
-    form = QueryListForm()
-    data = request.args
-    users = User.query.order_by(User.addTime.desc()).paginate(page, per_page=5, error_out=False)
-    if data:
-        userId = data.get('userId')
-        userName = data.get('userName')
-        if not userId and not userName:
-            users = User.query.order_by(User.addTime.desc()).paginate(page, per_page=5, error_out=False)
-        if userId or userName:
-            users = User.query.filter(User.userId.like("%" + userId + "%"), User.userName.like("%" + userName + "%")).paginate(page, per_page=5, error_out=False)
-    return render_template('admin/userList.html', form=form,users=users)
-
 # 用户列表ajax分页
-@app.route('/admin/userTest',methods = ['GET'])
-@app.route('/userTest',methods = ['GET'])
-def userTest(page=1,userId='',userName=''):
+@app.route('/admin/userList',methods = ['GET'])
+@app.route('/userList',methods = ['GET'])
+@login_required
+def userList(page=1,userId='',userName=''):
     form = QueryListForm()
     data = request.args
-    users = User.query.order_by(User.addTime.desc()).paginate(page, per_page=3, error_out=False)
+    users = User.query.filter(User.isData==True).order_by(User.addTime.desc()).paginate(page, per_page=3, error_out=False)
     item = {}
     # 如果是通过submit 提交则从url中获取数据
     if data:
@@ -76,12 +60,12 @@ def userTest(page=1,userId='',userName=''):
             }
         # 若提交的时候没用参数则查全部数据按照添加时间进行排序,否则按照字段进行模糊查询
         if not userId and not userName:
-            users = User.query.order_by(User.addTime.desc()).paginate(page, per_page=3, error_out=False)
+            users = User.query.filter(User.isData==True).order_by(User.addTime.desc()).paginate(page, per_page=3, error_out=False)
         if  userId or  userName:
-            users = User.query.filter(User.userId.like("%" + userId + "%"), User.userName.like("%" + userName + "%")).order_by(User.addTime.desc()).paginate(page, per_page=3, error_out=False)
+            users = User.query.filter(User.isData==True,User.userId.like("%" + userId + "%"), User.userName.like("%" + userName + "%")).order_by(User.addTime.desc()).paginate(page, per_page=3, error_out=False)
     item['userId'] = userId
     item['userName'] = userName
-    return render_template('admin/userTest.html', form=form,users=users,item=item)
+    return render_template('admin/userList.html', form=form,users=users,item=item)
 
 
 # 用户详细信息
@@ -97,15 +81,7 @@ def userData(userId):
     form = ApplyForm()
 
     # 查询用户已提交的资料
-    data = UserData.query.filter_by(userId=userId).first()
-    image = UserImage.query.filter_by(userId=userId).first()
-    if not image:
-        item['fileName'] = False
-        return render_template('admin/userData.html', form=form, item=item)
-
-    if image.fileName:
-        item['fileName']=image.fileName
-        item['fileData']= re.match("b'(.*?)'",str(image.fileData)).group(1)
+    data = UserData.query.filter_by(userId=userId).order_by(UserData.addTime.desc()).first()
     if data.cffex_c4:
         form.cffex_c4.checked='checked'
     if data.ine_c3:
@@ -132,6 +108,15 @@ def userData(userId):
         form.transact_record.checked='checked'
     if data.outher_com_auth:
         form.outher_com_auth.checked='checked'
+
+    image = UserImage.query.filter_by(userId=userId).order_by(UserImage.addTime.desc()).first()
+    if image:
+        item['fileName']=image.fileName
+        # item['fileData']= re.match("b'(.*?)'",str(image.fileData)).group(1)
+        item['fileData']=  re.match("b'(.*?)'",str(base64.b64encode(image.fileData))).group(1)
+    else:
+        item['fileName'] = False
+
     return render_template('admin/userData.html',form=form,item=item,base64=base64)
 
 
@@ -150,7 +135,6 @@ def userAdopt():
             result.isHandle = True
             result.handleName = adminUserId
             db.session.commit()
-
             return jsonify(status_code=200, msg="发送成功")
 
     abort(404)

@@ -60,7 +60,8 @@ class User(db.Model):
     userId = db.Column(db.String(64),nullable=False,unique=True)
     userName = db.Column(db.String(64),nullable=False)
     phone = db.Column(db.String(11),nullable=False)
-    isHandle = db.Column(db.Boolean(),nullable=False,default=False)
+    isHandle = db.Column(db.Integer(),nullable=False,default=False)
+    isData = db.Column(db.Boolean(),nullable=False,default=False)
     handleName = db.Column(db.String(11),nullable=False,default='无')
     addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     def __str__(self):

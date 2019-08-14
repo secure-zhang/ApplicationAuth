@@ -1,6 +1,6 @@
 # -*- conding = utf-8 -*-
 
-from __init__ import app,login_manager
+from __init__ import app,login_manager,db
 from flask_login import  login_required,logout_user
 from flask import render_template, request, redirect, url_for, session, jsonify,flash,abort
 from form import LoginForm,ApplyForm
@@ -57,7 +57,7 @@ def logout():
 @app.route('/user/sendCode',methods=['POST'])
 def sendCode():
     # 判断客户提交账号与名称是否正确，若正确则发送验证码
-    item = json.loads(request.data)
+    item = json.loads(request.data.decode('utf-8'))
     userId = item['userid'].strip()
     userName = item['username'].strip()
 
@@ -101,12 +101,17 @@ def apply():
                 # 针对文件名称进行处理
                 fileName = secure_filename(files.filename)
                 # 获取二进制的文件
-                fileData =base64.b64encode(files.read())
+                # fileData = base64.b64encode(files.read())
+                fileData = files.read()
 
                 img = UserImage(userId=userId,fileName=fileName,fileData=fileData)
                 tag2 = img.add()
             tag1 = data.add()
             if tag1 and tag2:
+                user = User.query.filter_by(userId=userId).first()
+                user.isData = True
+                db.session.commit()
+
                 flash(u'上传成功')
                 return redirect(url_for('explain'))
         except:
