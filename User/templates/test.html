@@ -1,16 +1,47 @@
-{% extends 'base.html' %}
-{% block base %}
+    document.querySelector('#files').addEventListener('change', function () {
+        var new_file_list = [];
+        var file_list = document.querySelector('#files').files;
+        for(var i=0;i<file_list.length;i++) {
+            data = lrz(file_list[i])
+            .then(function (rst) {
+                // 处理成功会执行
+                return rst
+            })
+            .catch(function (err) {
+                alert('上传失败');
+                // 处理失败会执行
+            })
+            .always(function () {
+                // 不管是成功失败，都会执行
+            });
+            if (data){new_file_list.push(data);}
+        }
+        console.log(new_file_list[0]);
+        if (new_file_list){send_img(new_file_list)}
 
-<style>
-    .a_width{width: 49%}
-</style>
-<!--        内容-->
-<h3 class="text-center lead"></h3>
-<div class="center">
+        });
+    function send_img(data) {
+            var token = $("#token").val();
+        $.ajax({
+                headers: {"X-CSRFToken": token},
+                contentType: 'application/json',
+                url: "{{ url_for('img') }}",
+                data: JSON.stringify(data),
+                dataType: "json",
+                type: "post",
+                async: false,
+                cache: false,
+                success: function (res) {
+                    // debugger;
+                    if (res.status_code == 200) {
+                        alert("发送成功");
+                    } else {
+                        alert("发送失败");
+                    }
+                },
+                error: function () {
+                    alert("验证码发送失败");
+                }
+            })
 
-        <div class="form-group text-center">
-            <a class="btn  btn-default a_width" href="{{ url_for('index') }}">用户登录</a>
-        </div>
-   </div>
-
-{% endblock %}
+}

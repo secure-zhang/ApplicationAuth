@@ -95,7 +95,7 @@ class UserImage(db.Model):
     userId = db.Column(db.String(64),db.ForeignKey('User.userId'), nullable=False)
     addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     fileName = db.Column(db.String(128))
-    fileData = db.Column(db.LargeBinary(length=65536))
+    fileData = db.Column(db.Text())
     def __repr__(self):
         return '<User %r>' % (self.userId)
 

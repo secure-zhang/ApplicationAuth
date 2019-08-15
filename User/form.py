@@ -76,7 +76,6 @@ class ApplyForm(FlaskForm):
     company_auth = BooleanField(label='交易权限')
     transact_record = BooleanField(label='交易记录')
     outher_com_auth = BooleanField(label='其他交易权限')
-    files = FileField(label='文件',validators=[FileAllowed(['jpg', 'png'], 'Images only!')])
     submit = SubmitField(label='下一步')
 
 

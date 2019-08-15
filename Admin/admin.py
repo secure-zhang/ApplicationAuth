@@ -113,7 +113,8 @@ def userData(userId):
     if image:
         item['fileName']=image.fileName
         # item['fileData']= re.match("b'(.*?)'",str(image.fileData)).group(1)
-        item['fileData']=  re.match("b'(.*?)'",str(base64.b64encode(image.fileData))).group(1)
+        # item['fileData']=  re.match("b'(.*?)'",str(base64.b64encode(image.fileData))).group(1)
+        item['fileData']=  image.fileData
     else:
         item['fileName'] = False
 
@@ -148,8 +149,7 @@ def userImgDel():
             item = json.loads(request.data)
             userId = item['userId'].strip()
             result = UserImage.query.filter_by(userId=userId).first()
-            result.fileName = None
-            result.fileData = None
+            db.session.delete(result)
             db.session.commit()
             return jsonify(status_code=200, msg="发送成功")
         except:

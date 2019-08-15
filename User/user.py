@@ -13,6 +13,7 @@ from flask import Blueprint
 from werkzeug.utils import secure_filename
 import base64
 
+from PIL import Image
 user = Blueprint('user',__name__)
 
 
@@ -60,7 +61,6 @@ def sendCode():
     item = json.loads(request.data.decode('utf-8'))
     userId = item['userid'].strip()
     userName = item['username'].strip()
-
     user = User.query.filter_by(userId=userId,userName=userName).first()
     if user:
         # 若存在用户,生成验证码
@@ -91,33 +91,35 @@ def apply():
         company_auth =form.company_auth.data
         transact_record =form.transact_record.data
         outher_com_auth =form.outher_com_auth.data
-        files =form.files.data
-        try:
-            data = UserData(userId=userId, cffex_c4=cffex_c4, ine_c3=ine_c3, ine_c4=ine_c4, shfe_c4=shfe_c4, dce_c3=dce_c3,
-                          dce_c4=dce_c4, czce_c3=czce_c3, czce_c4=czce_c4, cffex_code=cffex_code, ine_code=ine_code, company_auth=company_auth, transact_record=transact_record,
-                          outher_com_auth=outher_com_auth)
-            tag2 = True
-            if files:
-                # 针对文件名称进行处理
-                fileName = secure_filename(files.filename)
-                # 获取二进制的文件
-                # fileData = base64.b64encode(files.read())
-                fileData = files.read()
 
-                img = UserImage(userId=userId,fileName=fileName,fileData=fileData)
-                tag2 = img.add()
-            tag1 = data.add()
-            if tag1 and tag2:
-                user = User.query.filter_by(userId=userId).first()
-                user.isData = True
-                db.session.commit()
+        # try:
+        data = UserData(userId=userId, cffex_c4=cffex_c4, ine_c3=ine_c3, ine_c4=ine_c4, shfe_c4=shfe_c4, dce_c3=dce_c3,
+                      dce_c4=dce_c4, czce_c3=czce_c3, czce_c4=czce_c4, cffex_code=cffex_code, ine_code=ine_code, company_auth=company_auth, transact_record=transact_record,
+                      outher_com_auth=outher_com_auth)
 
-                flash(u'上传成功')
-                return redirect(url_for('explain'))
-        except:
-            flash(u'上传失败：请检查文件')
-            # abort(404)
+        tag1 = data.add()
+        if tag1:
+            user = User.query.filter_by(userId=userId).first()
+            user.isData = True
+            db.session.commit()
+
+            flash(u'上传成功')
+            return redirect(url_for('explain'))
+
     return render_template('user/apply.html',form=form)
+
+@app.route('/user/img',methods=['POST'])
+@login_required
+def img():
+    print(request.data)
+    item = json.loads(request.data.decode('utf-8'))
+
+    # img_base64 = item['base64']
+    # userId = session['userId']
+    # img = UserImage(userId=userId, fileName=userId, fileData=img_base64)
+    # img.add()
+    return jsonify(status_code=200)
+
 
 # 风险说明书
 @app.route('/user/explain',methods=['GET'])

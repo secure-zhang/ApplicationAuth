@@ -87,7 +87,7 @@ class UserImage(db.Model):
     userId = db.Column(db.String(64),db.ForeignKey('User.userId'), nullable=False)
     addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     fileName = db.Column(db.String(128))
-    fileData = db.Column(db.LargeBinary(length=65536))
+    fileData = db.Column(db.Text())
     def add(self):
         try:
             db.session.add(self)
@@ -107,7 +107,7 @@ if __name__ == '__main__':
     db.session.add(User(userId='root5',userName='root5',phone='176',userClass='1'))
     db.session.add(User(userId='root6',userName='root6',phone='176',userClass='1'))
     db.session.commit()
-    #
+
     # print(a)
     # a = Admin(adminUserId='root',password='1')
     # a.add()

@@ -6,7 +6,7 @@
 </style>
 <!--        内容-->
 <div class="center">
-    <form action="{{ url_for('apply') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ url_for('apply') }}" id="addForm" method="POST" enctype="multipart/form-data">
         <p class=" lead">申请类型：</p>
         <table class="table table-bordered table-hover table-condensed"  >
           <tr class="active">
@@ -137,8 +137,7 @@
         <!--            上边标签被选定则显示-->
 
                     <div id="file"  class="form-group" style="margin-left: 45px;display:none">
-                        {{ form.files(class="input-large",type="file") }}
-                        <p class="help-block"></p>
+                        <input class="input-large" accept="image/*" id="files" type="file" multiple>
                     </div>
                 </li>
                 <li>
@@ -148,7 +147,7 @@
          </div>
         <hr>
         <div class="form-group text-center">
-            {{ form.csrf_token }}
+            {{ form.csrf_token(id='token') }}
             <a class="btn  btn-default a_width" onclick="javascript:history.back(-1);">上一步</a>
             {{ form.submit(class='btn btn-default a_width') }}
         </div>
@@ -157,7 +156,50 @@
         </div>
     </form>
 </div>
+<script src="../../static/bootstrap-3.3.7-dist/js/lrz.bundle.js"></script>
 <script type="text/javascript">
+
+    //提交表单
+    var new_file_list = [];
+    document.querySelector('#files').addEventListener('change', function () {
+            rst = lrz(file_list[i])
+            .then(function (rst) {
+                // 处理成功会执行
+                // var token = $("#token").val();
+        $.ajax({
+                headers: {"X-CSRFToken": token},
+                contentType: 'application/json',
+                url: "{{ url_for('img') }}",
+                data: JSON.stringify(new_file_list),
+                dataType: "json",
+                type: "post",
+                async: false,
+                cache: false,
+                success: function (res) {
+                    // debugger;
+                    if (res.status_code == 200) {
+                        alert("发送成功");
+                    } else {
+                        alert("发送失败");
+                    }
+                },
+                error: function () {
+                    alert("验证码发送失败");
+                }
+
+})
+            })
+            .catch(function (err) {
+                alert('上传失败');
+                // 处理失败会执行
+            })
+            .always(function () {
+                // 不管是成功失败，都会执行
+            });
+        alert(new_file_list.length);
+
+
+        });
 
     // # 点击显示点击隐藏上传文件
     function display_files(){
