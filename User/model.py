@@ -94,19 +94,20 @@ class UserImage(db.Model):
             db.session.commit()
             return 1
         except Exception as e:
+            print(e)
             return 0
     def __repr__(self):
         return '<userId %r>' % (self.userId)
 
 if __name__ == '__main__':
     # db.create_all()
-    db.session.add(User(userId='root1',userName='root1',phone='176',userClass='1'))
-    db.session.add(User(userId='root2',userName='root2',phone='176',userClass='1'))
-    db.session.add(User(userId='root3',userName='root3',phone='176',userClass='1'))
-    db.session.add(User(userId='root4',userName='root4',phone='176',userClass='1'))
-    db.session.add(User(userId='root5',userName='root5',phone='176',userClass='1'))
-    db.session.add(User(userId='root6',userName='root6',phone='176',userClass='1'))
-    db.session.commit()
+    # db.session.add(User(userId='root1',userName='root1',phone='176',userClass='SH'))
+    # db.session.add(User(userId='root2',userName='root2',phone='176',userClass='SH'))
+    # db.session.add(User(userId='root3',userName='root3',phone='176',userClass='SH'))
+    # db.session.add(User(userId='root4',userName='root4',phone='176',userClass='SH'))
+    # db.session.add(User(userId='root5',userName='root5',phone='176',userClass='SH'))
+    # db.session.add(User(userId='root6',userName='root6',phone='176',userClass='SH'))
+    # db.session.commit()
 
     # print(a)
     # a = Admin(adminUserId='root',password='1')

@@ -7,13 +7,10 @@ from form import LoginForm,ApplyForm
 from datetime import timedelta
 import random,json
 from model import User,PhoneCode,UserData,UserImage
+import uuid
 
 # 创建 user 蓝图
 from flask import Blueprint
-from werkzeug.utils import secure_filename
-import base64
-
-from PIL import Image
 user = Blueprint('user',__name__)
 
 
@@ -36,9 +33,12 @@ def login():
         # 系统判断柜台是否通过适当性测试，若已通过显示评级，若未通过，转到适当性链接
         tag = True
         if tag:
+            # user = User.query.filter_by(userId=form.userId.data.strip()).first()
+            # if user.isData:
+            #     return redirect(url_for('success'))
             # 用户信息持久化 30 分钟
-            session['userId'] = form.userId.data
-            session['userName'] = form.userName.data
+            session['userId'] = form.userId.data.strip()
+            session['userName'] = form.userName.data.strip()
             session.permanent = True
             app.permanent_session_lifetime = timedelta(minutes=30)
             return redirect(url_for('apply'))
@@ -92,7 +92,6 @@ def apply():
         transact_record =form.transact_record.data
         outher_com_auth =form.outher_com_auth.data
 
-        # try:
         data = UserData(userId=userId, cffex_c4=cffex_c4, ine_c3=ine_c3, ine_c4=ine_c4, shfe_c4=shfe_c4, dce_c3=dce_c3,
                       dce_c4=dce_c4, czce_c3=czce_c3, czce_c4=czce_c4, cffex_code=cffex_code, ine_code=ine_code, company_auth=company_auth, transact_record=transact_record,
                       outher_com_auth=outher_com_auth)
@@ -102,22 +101,20 @@ def apply():
             user = User.query.filter_by(userId=userId).first()
             user.isData = True
             db.session.commit()
-
-            flash(u'上传成功')
             return redirect(url_for('explain'))
 
     return render_template('user/apply.html',form=form)
 
-@app.route('/user/img',methods=['POST'])
+@app.route('/user/send_img',methods=['POST'])
 @login_required
-def img():
-    print(request.data)
+def send_img():
     item = json.loads(request.data.decode('utf-8'))
-
-    # img_base64 = item['base64']
-    # userId = session['userId']
-    # img = UserImage(userId=userId, fileName=userId, fileData=img_base64)
-    # img.add()
+    img_base64 = item['base64']
+    userId = session['userId']
+    uuid_str = uuid.uuid4()
+    fileName = '%s-%s.png' % (userId,uuid_str)
+    img = UserImage(userId=userId, fileName=fileName, fileData=img_base64)
+    img.add()
     return jsonify(status_code=200)
 
 
@@ -129,6 +126,10 @@ def explain():
 
 # 关闭界面
 @app.route('/user/success',methods=['GET','POST'])
+@login_required
+
 def success():
-    logout()
+    session.pop('userName',None)
+    session.pop('userId',None)
+    logout_user()
     return render_template('user/success.html')

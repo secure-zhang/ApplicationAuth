@@ -91,12 +91,14 @@
     function sleep(code,time,errormsg) {
 
         code.attr("disabled", "disabled");
+        code.attr("onclick", "");
 	    var set=setInterval(function(){
 	        code.html(--time+"秒");
 	    }, 1000);
 
 	    setTimeout(function(){
             code.attr("disabled",false).html("重新获取验证码");
+            code.attr("onclick", "SendCode()");
             clearInterval(set);
 	    }, 1000*time);
     }

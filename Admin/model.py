@@ -101,5 +101,5 @@ class UserImage(db.Model):
 
 if __name__ == '__main__':
     db.create_all()
-#     a = Admin()
-#     db.session.add(a)
+    # a = Admin(adminUserId='root',password='test',jurisdiction='asd')
+    # db.session.add(a)

@@ -46,6 +46,7 @@ class LoginForm(FlaskForm):
             flash('账号或姓名错误请重新输入')
             raise validators.StopValidation(u'资金账号未找到')
 
+
         pc = PhoneCode.query.filter_by(userId=field.data,code=self.code.data.strip()).order_by(PhoneCode.addTime.desc()).first()
         if not pc:
             flash('验证码错误')
@@ -76,7 +77,7 @@ class ApplyForm(FlaskForm):
     company_auth = BooleanField(label='交易权限')
     transact_record = BooleanField(label='交易记录')
     outher_com_auth = BooleanField(label='其他交易权限')
-    submit = SubmitField(label='下一步')
+    submit = SubmitField(label='确认')
 
 
 
