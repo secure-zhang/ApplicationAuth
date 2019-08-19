@@ -73,7 +73,7 @@ def userList(page=1,userId='',userName=''):
 @login_required
 def userData(userId):
     # 记录用户名称,用户id,文件名称 返回给前端
-    item = {}
+    item = {'img':None}
     user = User.query.filter_by(userId=userId).first()
     userName = user.userName
     item['userName']=userName
@@ -109,12 +109,17 @@ def userData(userId):
     if data.outher_com_auth:
         form.outher_com_auth.checked='checked'
 
-    image = UserImage.query.filter_by(userId=userId).order_by(UserImage.addTime.desc()).first()
+    image = UserImage.query.filter_by(userId=userId).all()
+
     if image:
-        item['fileName']=image.fileName
-        # item['fileData']= re.match("b'(.*?)'",str(image.fileData)).group(1)
-        # item['fileData']=  re.match("b'(.*?)'",str(base64.b64encode(image.fileData))).group(1)
-        item['fileData']=  image.fileData
+        for i in image:
+            item['img'][i.fileName] = i.fileData
+
+
+        # item['fileName']=image.fileName
+        # # item['fileData']= re.match("b'(.*?)'",str(image.fileData)).group(1)
+        # # item['fileData']=  re.match("b'(.*?)'",str(base64.b64encode(image.fileData))).group(1)
+        # item['fileData']=  image.fileData
     else:
         item['fileName'] = False
 
@@ -176,8 +181,8 @@ def adminPassword():
 @login_required
 def adminRegister():
     # 判断是否为超级管理员
-    if not session['tag']:
-        abort(404)
+    # if not session['tag']:
+    #     abort(404)
 
     item = {}
     form = RegisterForm()

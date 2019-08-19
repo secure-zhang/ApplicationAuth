@@ -17,7 +17,6 @@
   }
 
   .img-cont>div>a{
-
     width:250px;
     height:30px;
     border-radius:4px;
@@ -28,146 +27,16 @@
     background: #317ef3;
     margin:5px 0px;
     cursor: pointer;
-
   }
 </style>
 
 <!--        内容-->
-<div class="center">
+<div class="">
     <form action="{{ url_for('apply') }}" id="addForm" method="POST" enctype="multipart/form-data">
-        <p class=" lead">申请类型：</p>
         <div class="form-group">
-            <table class="table table-bordered table-hover table-condensed"  >
-          <tr class="active">
-              <td>中金所</td>
-              <td>
-                  <div class="checkbox">
-                      <label>
-                          {{ form.cffex_c4() }}
-                        开户申请C4
-                      </label>
-                    </div>
-              </td>
-              <td></td>
-          </tr>
-            <tr  class="active">
-              <td>能源中心</td>
-              <td>
-                  <div class="checkbox">
-                      <label>
-                          {{ form.ine_c3() }}
+            <ul class="list-unstyled text-indent" >
 
-                        开户申请C3
-                      </label>
-                  </div>
-              </td>
-              <td>
-                  <div class="checkbox">
-                      <label>
-                          {{ form.ine_c4() }}
-                        原油期货交易权限C4
-                      </label>
-                  </div>
-              </td>
-          </tr>
-            <tr  class="active">
-              <td>上期所</td>
-              <td>
-                   <div class="checkbox">
-                      <label>
-                          {{ form.shfe_c4() }}
-                        期权交易权限C4
-                      </label>
-                  </div>
-              </td>
-              <td></td>
-          </tr>
-            <tr class="active">
-              <td>大商所</td>
-              <td>
-                   <div class="checkbox">
-                      <label>
-                          {{ form.dce_c3() }}
-                        铁矿石期货交易权限C3
-                      </label>
-                  </div>
-              </td>
-              <td>
-                   <div class="checkbox">
-                      <label>
-                          {{ form.dce_c4() }}
-                        期权交易权限C4
-                      </label>
-                  </div>
-              </td>
-          </tr>
-            <tr class="active">
-              <td>郑商所</td>
-              <td>
-                   <div class="checkbox">
-                      <label>
-                           {{ form.czce_c3() }}
-                        PTA期货交易权限C3
-                      </label>
-                  </div>
-              </td>
-              <td>
-                   <div class="checkbox">
-                      <label>
-                          {{ form.czce_c4() }}
-                        期权交易权限C4
-                      </label>
-                  </div>
-              </td>
-          </tr>
-        </table>
-        </div>
-
-        <p class=" lead">权限证明文件：</p>
-        <div class="form-group">
-            <ul class="list-unstyled " >
-                <li style="margin: 0 auto">
-                      <div class="checkbox">
-                          <label>
-                              {{ form.cffex_code() }}
-                            具有中金所编码
-                          </label>
-                        </div>
-                </li>
-                <li>
-                      <div class="checkbox">
-                          <label>
-                              {{ form.ine_code() }}
-                            具有能源中心编码
-                          </label>
-                        </div>
-                </li>
-                <li>
-                      <div class="checkbox">
-                          <label>
-                              {{ form.company_auth() }}
-                            具有本公司其他适当性品种交易权限
-                          </label>
-                        </div>
-                </li>
-                <li>
-                      <div class="checkbox">
-                          <label>
-                              {{ form.transact_record() }}
-                            具有50个交易日交易记录（一年内）
-                          </label>
-                        </div>
-                </li>
-                <li  class="">
-                    <div class="checkbox text-danger" >
-                          <label  >
-                              {{ form.outher_com_auth(onclick="display_files()") }}
-                            具有其他公司其他适当性品种交易权限
-                          </label>
-                      </div>
-        <!--            上边标签被选定则显示-->
-
-                    <div id="file"  class="form-inline" style="display:none">
+                    <div id="file"  class="form-inline" >
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">点击上传</button>
                         <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                             <div class="modal-dialog modal-lg" role="document">
@@ -178,20 +47,19 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="col-xs-12 col-md-12 ">
-                                            <div class="form-group">
-                                                <input type="file"  id='files' value="" onchange='PreviewImage(this)' accept="image/*" />
-                                            </div>
+                                                <div class="form-group">
+                                                    <input type="file"  id='files' value="" onchange='PreviewImage(this)' accept="image/*" />
+                                                </div>
                                         </div>
                                         <hr>
-<!--                                       <-- 图片容器-->
                                         <div class="container img-cont" >
 
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
-                                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="CompressImg()">上传</button>
-                                    </div>
+                <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                <button type="button" class="btn btn-primary" onclick="CompressImg()">上传</button>
+            </div>
                                 </div>
                             </div>
                         </div>
@@ -202,16 +70,6 @@
                 </li>
             </ul>
          </div>
-        <hr>
-
-        <div class="form-group text-center">
-            {{ form.csrf_token(id='token') }}
-            <a class="btn  btn-default a_width" onclick="javascript:history.back(-1);">上一步</a>
-            {{ form.submit(class="btn btn-default a_width") }}
-        </div>
-        <div class="form-group">
-            <span>{{ get_flashed_messages()[0] }}</span>
-        </div>
     </form>
 </div>
     <script src="../../static/bootstrap-3.3.7-dist/js/jquery.min.js"></script>
@@ -267,14 +125,13 @@ var id=0;
 
     // 压缩图片并上传
     function CompressImg () {
-             $('body').append("<div style='display:none;width:100%; margin:0 auto;position:fixed;left:0;top:0;bottom: 0;z-index: 111;opacity: 0.5;' id='loading'> <a class='mui-active' style='left: 50%;position: absolute;top:50%'><span class='mui-spinner'></span><p style='margin-left: -10px;'>正在处理，请稍等！</p></a></div>");
-         　　$("#loading").show();
             for(var i=0;i<file_list.length;i++) {
                 // 判断是否被删除
             if (!delete_img_id_list.includes(String(i+1))){
                     data = lrz(file_list[i])
                     .then(function (rst) {
                         // 处理成功会执行
+                        console.log(rst);
                         SendImg(rst);
 
                     })
@@ -287,8 +144,7 @@ var id=0;
                     });
                 }
         }
-            $("#loading").hide();
-     }
+        }
     function SendImg(data) {
         var token = $("#token").val();
         $.ajax({
@@ -314,6 +170,7 @@ var id=0;
             })
 
 }
+
     // # 点击显示点击隐藏上传文件
     function display_files(){
         var files = document.getElementById("file");

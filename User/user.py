@@ -33,9 +33,9 @@ def login():
         # 系统判断柜台是否通过适当性测试，若已通过显示评级，若未通过，转到适当性链接
         tag = True
         if tag:
-            # user = User.query.filter_by(userId=form.userId.data.strip()).first()
-            # if user.isData:
-            #     return redirect(url_for('success'))
+            user = User.query.filter_by(userId=form.userId.data.strip()).first()
+            if user.isData:
+                return redirect(url_for('success'))
             # 用户信息持久化 30 分钟
             session['userId'] = form.userId.data.strip()
             session['userName'] = form.userName.data.strip()

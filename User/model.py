@@ -15,6 +15,7 @@ class User(db.Model):
     handleName = db.Column(db.String(11),nullable=False,default='无')
     userClass = db.Column(db.String(64),nullable=False)
     addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
+    updateTime = db.Column(db.DateTime())
     def __str__(self):
         return 'Application{userId=%s,userName=%s,phone=%s,}' % (self.userId, self.userName, self.phone)
     def get_id(self):
@@ -101,13 +102,15 @@ class UserImage(db.Model):
 
 if __name__ == '__main__':
     # db.create_all()
-    # db.session.add(User(userId='root1',userName='root1',phone='176',userClass='SH'))
-    # db.session.add(User(userId='root2',userName='root2',phone='176',userClass='SH'))
-    # db.session.add(User(userId='root3',userName='root3',phone='176',userClass='SH'))
-    # db.session.add(User(userId='root4',userName='root4',phone='176',userClass='SH'))
-    # db.session.add(User(userId='root5',userName='root5',phone='176',userClass='SH'))
-    # db.session.add(User(userId='root6',userName='root6',phone='176',userClass='SH'))
-    # db.session.commit()
+    db.session.add(User(userId='root7',userName='root7',phone='176',userClass='SH'))
+    db.session.add(User(userId='root8',userName='root8',phone='176',userClass='SH'))
+    db.session.add(User(userId='root1',userName='root1',phone='176',userClass='SH'))
+    db.session.add(User(userId='root2',userName='root2',phone='176',userClass='SH'))
+    db.session.add(User(userId='root3',userName='root3',phone='176',userClass='SH'))
+    db.session.add(User(userId='root4',userName='root4',phone='176',userClass='SH'))
+    db.session.add(User(userId='root5',userName='root5',phone='176',userClass='SH'))
+    db.session.add(User(userId='root6',userName='root6',phone='176',userClass='SH'))
+    db.session.commit()
 
     # print(a)
     # a = Admin(adminUserId='root',password='1')
