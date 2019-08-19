@@ -267,8 +267,8 @@ var id=0;
 
     // 压缩图片并上传
     function CompressImg () {
-             $('body').append("<div style='display:none;width:100%; margin:0 auto;position:fixed;left:0;top:0;bottom: 0;z-index: 111;opacity: 0.5;' id='loading'> <a class='mui-active' style='left: 50%;position: absolute;top:50%'><span class='mui-spinner'></span><p style='margin-left: -10px;'>正在处理，请稍等！</p></a></div>");
-         　　$("#loading").show();
+            $('body').append("<div style='display:none;width:100%; margin:0 auto;position:fixed;left:0;top:0;bottom: 0;z-index: 111;opacity: 0.5;' id='loading'> <a class='mui-active' style='left: 50%;position: absolute;top:50%'><span class='mui-spinner'></span><p style='margin-left: -10px;'>正在处理，请稍等！</p></a></div>");
+        　　$("#loading").show();
             for(var i=0;i<file_list.length;i++) {
                 // 判断是否被删除
             if (!delete_img_id_list.includes(String(i+1))){
@@ -276,18 +276,18 @@ var id=0;
                     .then(function (rst) {
                         // 处理成功会执行
                         SendImg(rst);
-
                     })
                     .catch(function (err) {
-                        alert('上传失败');
                         // 处理失败会执行
+                        alert('上传失败');
                     })
                     .always(function () {
                         // 不管是成功失败，都会执行
                     });
                 }
-        }
+            }
             $("#loading").hide();
+            alert('正在上传请等待！')
      }
     function SendImg(data) {
         var token = $("#token").val();
