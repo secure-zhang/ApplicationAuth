@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
 {% block base %}
-
+      {% block title %}
+      <title>冠通期货交易权限开通申请系统</title>
+      {% endblock %}
 <style>
     .a_width{width: 49%}
 </style>
+
 <!--        内容-->
 <div class="center">
       <form action="{{ url_for('success') }}" method="get" name="login">
           <div class="">
             <ol>
-                <li>期货交易风险说明书</li>
-                <li>合规诚信承诺函</li>
+                <li><a href="{{url_for('explain',tag=1)}}">期货交易风险说明书</a></li>
+                <li><a href="{{url_for('explain',tag=2)}}">合规诚信承诺函</a></li>
             </ol>
           </div>
           <hr>

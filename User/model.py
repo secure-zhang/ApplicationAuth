@@ -9,11 +9,12 @@ class User(db.Model):
     id = db.Column(db.Integer(),primary_key=True,autoincrement=True)
     userId = db.Column(db.String(64),nullable=False,unique=True)
     userName = db.Column(db.String(64),nullable=False)
+    userClass = db.Column(db.String(64),nullable=False) # 用户类
+    userGrade = db.Column(db.Integer(),nullable=False)  # 用户评级
     phone = db.Column(db.String(11),nullable=False)
     isHandle = db.Column(db.Integer(),nullable=False,default=2)
     isData = db.Column(db.Boolean(),nullable=False,default=False)
     handleName = db.Column(db.String(11),nullable=False,default='无')
-    userClass = db.Column(db.String(64),nullable=False)
     addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     updateTime = db.Column(db.DateTime())
     def __str__(self):
@@ -102,14 +103,14 @@ class UserImage(db.Model):
 
 if __name__ == '__main__':
     # db.create_all()
-    db.session.add(User(userId='root7',userName='root7',phone='176',userClass='SH'))
-    db.session.add(User(userId='root8',userName='root8',phone='176',userClass='SH'))
-    db.session.add(User(userId='root1',userName='root1',phone='176',userClass='SH'))
-    db.session.add(User(userId='root2',userName='root2',phone='176',userClass='SH'))
-    db.session.add(User(userId='root3',userName='root3',phone='176',userClass='SH'))
-    db.session.add(User(userId='root4',userName='root4',phone='176',userClass='SH'))
-    db.session.add(User(userId='root5',userName='root5',phone='176',userClass='SH'))
-    db.session.add(User(userId='root6',userName='root6',phone='176',userClass='SH'))
+    db.session.add(User(userId='root7',userName='root7',phone='176',userClass='SH',userGrade=1))
+    db.session.add(User(userId='root8',userName='root8',phone='176',userClass='SH',userGrade=2))
+    db.session.add(User(userId='root1',userName='root1',phone='176',userClass='SH',userGrade=3))
+    db.session.add(User(userId='root2',userName='root2',phone='176',userClass='SH',userGrade=4))
+    db.session.add(User(userId='root3',userName='root3',phone='176',userClass='SH',userGrade=5))
+    db.session.add(User(userId='root4',userName='root4',phone='176',userClass='SH',userGrade=3))
+    db.session.add(User(userId='root5',userName='root5',phone='176',userClass='SH',userGrade=4))
+    db.session.add(User(userId='root6',userName='root6',phone='176',userClass='SH',userGrade=5))
     db.session.commit()
 
     # print(a)

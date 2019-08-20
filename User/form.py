@@ -15,7 +15,7 @@ class LoginForm(FlaskForm):
     # 用户登陆表单
     userId = StringField(label='资金账号', validators=[DataRequired(message='资金账号不能为空')],
                          render_kw={
-                             'placeholder': u'资金账号'
+                             'placeholder': u'资金账号',
                          }
                          )
 
@@ -64,14 +64,38 @@ class LoginForm(FlaskForm):
 
 class ApplyForm(FlaskForm):
     # 用户申请界面
-    cffex_c4 = BooleanField(label='中金所1')
-    ine_c3 = BooleanField(label='能源中心1')
-    ine_c4 = BooleanField(label='能源中心2')
-    shfe_c4 = BooleanField(label='上期所1')
-    dce_c3 = BooleanField(label='大商所1')
-    dce_c4 = BooleanField(label='大商所2')
-    czce_c3 = BooleanField(label='郑商所1')
-    czce_c4 = BooleanField(label='郑商所2')
+    cffex_c4 = BooleanField(label='中金所1',
+                            render_kw={
+                               'disabled': 'disabled'
+                           })
+    ine_c3 = BooleanField(label='能源中心1',
+                          render_kw={
+                              'disabled': 'disabled'
+                          })
+    ine_c4 = BooleanField(label='能源中心2',
+                          render_kw={
+                              'disabled': 'disabled'
+                          })
+    shfe_c4 = BooleanField(label='上期所1',
+                          render_kw={
+                              'disabled': 'disabled'
+                          })
+    dce_c3 = BooleanField(label='大商所1',
+                          render_kw={
+                              'disabled': 'disabled'
+                          })
+    dce_c4 = BooleanField(label='大商所2',
+                          render_kw={
+                              'disabled': 'disabled'
+                          })
+    czce_c3 = BooleanField(label='郑商所1',
+                          render_kw={
+                              'disabled': 'disabled'
+                          })
+    czce_c4 = BooleanField(label='郑商所2',
+                          render_kw={
+                              'disabled': 'disabled'
+                          })
     cffex_code = BooleanField(label='中金所编码')
     ine_code = BooleanField(label='能源中心编码')
     company_auth = BooleanField(label='交易权限')

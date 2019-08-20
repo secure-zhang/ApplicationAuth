@@ -30,19 +30,20 @@ def load_user(user_id):
 def login():
     form = LoginForm()
     if form.validate_on_submit():
+        user = User.query.filter_by(userId=form.userId.data.strip()).first()
+        if user.isData:
+            return redirect(url_for('success'))
         # 系统判断柜台是否通过适当性测试，若已通过显示评级，若未通过，转到适当性链接
-        tag = True
-        if tag:
-            user = User.query.filter_by(userId=form.userId.data.strip()).first()
-            if user.isData:
-                return redirect(url_for('success'))
-            # 用户信息持久化 30 分钟
-            session['userId'] = form.userId.data.strip()
-            session['userName'] = form.userName.data.strip()
-            session.permanent = True
-            app.permanent_session_lifetime = timedelta(minutes=30)
-            return redirect(url_for('apply'))
-        return redirect(location='http://114.251.192.185:8080/clients/register/start')
+        if user.userGrade == 5:
+            return redirect(location='http://114.251.192.185:8080/clients/register/start')
+        # 用户信息持久化 30 分钟
+        session['userId'] = user.userId
+        session['userName'] = user.userName
+        session['userGrade'] = user.userGrade
+
+        session.permanent = True
+        app.permanent_session_lifetime = timedelta(minutes=30)
+        return redirect(url_for('apply'))
     return render_template('user/login.html',form=form)
 
 # 登出
@@ -76,31 +77,57 @@ def sendCode():
 @login_required
 def apply():
     form = ApplyForm()
+    # 判断用户的评测级别并按级别显示可选申请
+    userGrade = session['userGrade']
+    if userGrade < 4:
+        form.ine_c3.render_kw['disabled']=False
+        form.czce_c3.render_kw['disabled']=False
+        form.dce_c3.render_kw['disabled']=False
+
+    if userGrade < 5:
+        form.cffex_c4.render_kw['disabled']=False
+        form.ine_c4.render_kw['disabled']=False
+        form.shfe_c4.render_kw['disabled']=False
+        form.dce_c4.render_kw['disabled']=False
+        form.czce_c4.render_kw['disabled']=False
+
     if form.validate_on_submit():
         userId = session['userId']
-        cffex_c4 =form.cffex_c4.data
-        ine_c3 =form.ine_c3.data
-        ine_c4 =form.ine_c4.data
-        shfe_c4 =form.shfe_c4.data
-        dce_c3 = form.dce_c3.data
-        dce_c4 =form.dce_c4.data
-        czce_c3 =form.czce_c3.data
-        czce_c4 =form.czce_c4.data
-        cffex_code =form.cffex_code.data
+
+        # 防止用户通过html修改页面恶意串改数据
+        if userGrade <= 3:
+            ine_c3 =form.ine_c3.data
+            dce_c3 = form.dce_c3.data
+            czce_c3 =form.czce_c3.data
+        else:
+            ine_c3 =False
+            dce_c3 = False
+            czce_c3 =False
+        if userGrade <= 4:
+            cffex_c4 =form.cffex_c4.data
+            ine_c4 =form.ine_c4.data
+            shfe_c4 =form.shfe_c4.data
+            dce_c4 =form.dce_c4.data
+            czce_c4 =form.czce_c4.data
+        else:
+            cffex_c4 = False
+            ine_c4 = False
+            shfe_c4 = False
+            dce_c4 = False
+            czce_c4 = False
+
+        cffex_code = form.cffex_code.data
         ine_code =form.ine_code.data
         company_auth =form.company_auth.data
         transact_record =form.transact_record.data
         outher_com_auth =form.outher_com_auth.data
-
         data = UserData(userId=userId, cffex_c4=cffex_c4, ine_c3=ine_c3, ine_c4=ine_c4, shfe_c4=shfe_c4, dce_c3=dce_c3,
                       dce_c4=dce_c4, czce_c3=czce_c3, czce_c4=czce_c4, cffex_code=cffex_code, ine_code=ine_code, company_auth=company_auth, transact_record=transact_record,
                       outher_com_auth=outher_com_auth)
 
         tag1 = data.add()
         if tag1:
-            user = User.query.filter_by(userId=userId).first()
-            user.isData = True
-            db.session.commit()
+
             return redirect(url_for('explain'))
 
     return render_template('user/apply.html',form=form)
@@ -120,15 +147,24 @@ def send_img():
 
 # 风险说明书
 @app.route('/user/explain',methods=['GET'])
+@app.route('/user/explain/<int:tag>',methods=['GET'])
 @login_required
-def explain():
-    return render_template('user/explain.html')
+def explain(tag=0):
+    if tag == 1:
+        return render_template('user/Agreement/ComplianceLetterHonestyCommitment.html')
+    if tag == 2:
+        return render_template('user/Agreement/FuturesTradingRiskInstructions.html')
+    else:
+        return render_template('user/explain.html')
 
 # 关闭界面
 @app.route('/user/success',methods=['GET','POST'])
 @login_required
-
 def success():
+    userId = session['userId']
+    user = User.query.filter_by(userId=userId).first()
+    user.isData = True
+    db.session.commit()
     session.pop('userName',None)
     session.pop('userId',None)
     logout_user()

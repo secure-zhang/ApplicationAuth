@@ -5,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-    <title>冠通期货交易权限开通申请系统</title>
+      {% block title %}
+      <title>冠通期货交易权限开通申请系统</title>
+      {% endblock %}
 
     <!-- Bootstrap -->
 
@@ -25,23 +27,12 @@
     <div class="header">
             <nav class="navbar navbar-inverse">
                 <div class="container-fluid">
-                <!-- Brand and toggle get grouped for better mobile display -->
 <!--                    logo-->
                 <div class="navbar-header">
                     <a class="navbar-brand" href="">Gt Futures</a>
                 </div>
 
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                  <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        {% if session.userName %}
-                        <p class="navbar-text">当前登录: {{session.userName}}</p>
-                        {% endif %}
-                    </li>
-                  </ul>
-                </div><!-- /.navbar-collapse -->
-              </div><!-- /.container-fluid -->
+              </div>
             </nav>
         </div>
 
@@ -58,9 +49,9 @@
 <!--        内容--><!--模板继承-->
         <div class="row">
           <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
-            {% block base %}
+              {% block base %}
 
-            {% endblock %}
+              {% endblock %}
           </div>
         </div>
 <!--        页脚-->

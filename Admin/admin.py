@@ -70,10 +70,10 @@ def userList(page=1,userId='',userName=''):
 
 # 用户详细信息
 @app.route('/userData/<string:userId>',methods=['GET'])
-@login_required
+# @login_required
 def userData(userId):
     # 记录用户名称,用户id,文件名称 返回给前端
-    item = {'img':None}
+    item = {'img':[]}
     user = User.query.filter_by(userId=userId).first()
     userName = user.userName
     item['userName']=userName
@@ -110,19 +110,11 @@ def userData(userId):
         form.outher_com_auth.checked='checked'
 
     image = UserImage.query.filter_by(userId=userId).all()
-
     if image:
         for i in image:
-            item['img'][i.fileName] = i.fileData
-
-
-        # item['fileName']=image.fileName
-        # # item['fileData']= re.match("b'(.*?)'",str(image.fileData)).group(1)
-        # # item['fileData']=  re.match("b'(.*?)'",str(base64.b64encode(image.fileData))).group(1)
-        # item['fileData']=  image.fileData
+            item['img'].append({i.fileName:i.fileData})
     else:
-        item['fileName'] = False
-
+        item['img'] = ''
     return render_template('admin/userData.html',form=form,item=item,base64=base64)
 
 
