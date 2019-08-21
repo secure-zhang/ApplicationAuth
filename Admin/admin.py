@@ -44,7 +44,7 @@ def userList(page=1,userId='',userName=''):
     form = QueryListForm()
     data = request.args
     jurisdiction = tuple(session['jurisdiction'])
-    users = User.query.filter(User.isData==True,User.userClass.in_(jurisdiction)).order_by(User.addTime.desc()).paginate(page, per_page=3, error_out=False)
+    users = User.query.filter(User.isData==True,User.userClass.in_(jurisdiction)).order_by(User.addTime.desc()).paginate(page, per_page=10, error_out=False)
 
     item = {}
     # 如果是通过submit 提交则从url中获取数据
@@ -63,9 +63,9 @@ def userList(page=1,userId='',userName=''):
             }
         # 若提交的时候没用参数则查全部数据按照添加时间进行排序,否则按照字段进行模糊查询
         if not userId and not userName:
-            users = User.query.filter(User.isData==True,User.userClass.in_(jurisdiction)).order_by(User.addTime.desc()).paginate(page, per_page=3, error_out=False)
+            users = User.query.filter(User.isData==True,User.userClass.in_(jurisdiction)).order_by(User.addTime.desc()).paginate(page, per_page=10, error_out=False)
         if  userId or  userName:
-            users = User.query.filter(User.isData==True,User.userClass.in_(jurisdiction),User.userId.like("%" + userId + "%"), User.userName.like("%" + userName + "%")).order_by(User.addTime.desc()).paginate(page, per_page=3, error_out=False)
+            users = User.query.filter(User.isData==True,User.userClass.in_(jurisdiction),User.userId.like("%" + userId + "%"), User.userName.like("%" + userName + "%")).order_by(User.addTime.desc()).paginate(page, per_page=10, error_out=False)
     item['userId'] = userId
     item['userName'] = userName
     return render_template('admin/userList.html', form=form,users=users,item=item)
@@ -77,7 +77,11 @@ def userList(page=1,userId='',userName=''):
 def userData(userId):
     # 记录用户名称,用户id,文件名称 返回给前端
     item = {'img':{}}
+    jurisdiction = tuple(session['jurisdiction'])
     user = User.query.filter_by(userId=userId).first()
+    # 防止管理员获取无权限用户信息
+    if user.userClass not in jurisdiction:
+        return redirect(url_for('userList'))
     userName = user.userName
     isHandle = user.isHandle
     item['userName']=userName
