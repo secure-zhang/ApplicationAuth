@@ -127,7 +127,9 @@ def apply():
 
         tag1 = data.add()
         if tag1:
-
+            userId = session['userId']
+            user = User.query.filter_by(userId=userId).first()
+            user.isData = True
             return redirect(url_for('explain'))
 
     return render_template('user/apply.html',form=form)
@@ -161,9 +163,7 @@ def explain(tag=0):
 @app.route('/user/success',methods=['GET','POST'])
 @login_required
 def success():
-    userId = session['userId']
-    user = User.query.filter_by(userId=userId).first()
-    user.isData = True
+
     db.session.commit()
     session.pop('userName',None)
     session.pop('userId',None)
