@@ -59,11 +59,14 @@ class User(db.Model):
     id = db.Column(db.Integer(),primary_key=True,autoincrement=True)
     userId = db.Column(db.String(64),nullable=False,unique=True)
     userName = db.Column(db.String(64),nullable=False)
+    userClass = db.Column(db.String(64),nullable=False) # 用户类
+    userGrade = db.Column(db.Integer(),nullable=False)  # 用户评级
     phone = db.Column(db.String(11),nullable=False)
-    isHandle = db.Column(db.Integer(),nullable=False,default=False)
+    isHandle = db.Column(db.Integer(),nullable=False,default=2)
     isData = db.Column(db.Boolean(),nullable=False,default=False)
     handleName = db.Column(db.String(11),nullable=False,default='无')
     addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
+    updateTime = db.Column(db.DateTime())
     def __str__(self):
         return 'Application{userId=%s,userName=%s,phone=%s,}' % (self.userId, self.userName, self.phone)
 

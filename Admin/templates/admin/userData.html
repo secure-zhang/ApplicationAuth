@@ -7,7 +7,7 @@
 <!--        内容-->
 <h3 class="text-center lead">资金账号：<span id="userId">{{item.userId}}</span>，客户名称：{{item.userName}}</h3>
 <div class="center">
-    <form >
+    <form id="Form">
         <p class=" lead">申请类型：</p>
         <table class="table table-bordered table-hover table-condensed"  >
           <tr class="active">
@@ -139,9 +139,38 @@
                 <li >
                     <div class="" style="margin-left: 50px">
                         {% if item.img %}
-                            {% for i in range(item.img) %}
-                                {{i}}
-                            {% endfor %}
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">查看证明文件</button>
+                        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">证明文件</h4>
+                                    </div>
+                                    <div class="modal-body">
+<!--                                       <-- 图片容器-->
+                                            <div class="row">
+                                              <div class="col-sm-12 col-md-12">
+                                                    {% for k,v in item.img.items()%}
+                                                      <div class="thumbnail">
+                                                          <img src="{{v}}">
+                                                          <div class="caption text-center">
+                                                            <span>{{k}}</span>
+                                                              {% if item.isHandle == 2 %}
+                                                                <button  class="btn btn-primary" onclick="deleteImg('{{k}}')" role="button">删除</button>
+                                                              {% endif %}
+                                                          </div>
+                                                      </div>
+                                                    {% endfor %}
+                                              </div>
+                                            </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         {% endif %}
                     </div>
                 </li>
@@ -160,6 +189,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
 <script type="text/javascript">
+
 
         function downloadPdf() {
             var targetDom = $("#pdfContainer");
@@ -248,15 +278,30 @@
         }
     }
     // 用户通过
+        // 获取表单数据
+        elements = function () {
+          var form = document.getElementById('Form');
+          var elements = new Array();
+          var tagElements = form.getElementsByTagName('input');
+          for (var j = 0; j < tagElements.length; j++){
+             elements.push(tagElements[j]);
+
+          }
+          console.log(elements);
+          return elements;
+        };
+
+
     function adopt(){
         var userId = '{{item.userId}}';
         var userName = '{{item.userName}}';
         var token =  $("#token").val();
+        elements = elements();
         $.ajax({
             headers:{"X-CSRFToken":token},
             contentType:'application/json',
             url:"{{ url_for('userAdopt') }}",
-            data: JSON.stringify({userId:userId}),
+            data: JSON.stringify({'userId':userId,'elements':elements}),
             dataType:"json",
             type:"post",
             async : false,
@@ -279,14 +324,14 @@
         })
     }
     // # 删除图片
-    function deleteImg(){
+    function deleteImg(fileName){
         var userId = '{{item.userId}}';
         var token =  $("#token").val();
         $.ajax({
             headers:{"X-CSRFToken":token},
             contentType:'application/json',
             url:"{{ url_for('userImgDel') }}",
-            data: JSON.stringify({userId:userId}),
+            data: JSON.stringify({'userId':userId,'fileName':fileName}),
             dataType:"json",
             type:"post",
             async : false,

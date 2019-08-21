@@ -33,6 +33,7 @@
                 <td>状态</td>
                 <td>操作员</td>
                 <td>处理</td>
+                <td>处理时间</td>
             </tr>
             {% for i in users.items %}
                 <tr>
@@ -50,6 +51,12 @@
                     </td>
                     <td>{{ i.handleName }}</td>
                     <td><a href="{{url_for('userData',userId=i.userId )}}" >详细资料</a></td>
+                    <td>
+                        {% if i.updateTime %}
+                            {{i.updateTime}}
+                        {% else %}
+                         {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
 

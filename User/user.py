@@ -79,12 +79,12 @@ def apply():
     form = ApplyForm()
     # 判断用户的评测级别并按级别显示可选申请
     userGrade = session['userGrade']
-    if userGrade < 4:
+    if userGrade >= 3:
         form.ine_c3.render_kw['disabled']=False
         form.czce_c3.render_kw['disabled']=False
         form.dce_c3.render_kw['disabled']=False
 
-    if userGrade < 5:
+    if userGrade >= 4:
         form.cffex_c4.render_kw['disabled']=False
         form.ine_c4.render_kw['disabled']=False
         form.shfe_c4.render_kw['disabled']=False

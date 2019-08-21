@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 # app = Flask(__name__)
 
-app.debug = True
+# app.debug = True
 
 app.config["SECRET_KEY"] = os.urandom(24)
 app.secret_key = os.urandom(24)
