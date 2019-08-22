@@ -12,10 +12,9 @@ import requests
 from urllib.parse import urlencode
 
 #
-data = {'name':'冠通期货','pwd':'GTQH0037'}
-url = 'http://www.139000.com/send/getfee.asp?'+urlencode(data)
-url1 = 'http://www.139000.com/send/gsend.asp?name=冠通期货&pwd=GTQH0037&dst=17635035787&msg=测试'
-res = requests.get(url1)
+url = 'http://www.139000.com/send/gsend.asp?name=%b9%da%cd%a8%c6%da%bb%f5&pwd=gtqh0037&dst={dst}&msg={msg}'.format(dst='17635035787',msg='hello')
+print(url)
+res = requests.get(url)
 print(res.status_code)
 print(res.headers)
 print(res.text)

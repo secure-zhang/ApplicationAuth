@@ -80,6 +80,9 @@ def userData(userId):
     jurisdiction = tuple(session['jurisdiction'])
     user = User.query.filter_by(userId=userId).first()
     # 防止管理员获取无权限用户信息
+    if not user:
+        return redirect(url_for('userList'))
+
     if user.userClass not in jurisdiction:
         return redirect(url_for('userList'))
     userName = user.userName
@@ -160,19 +163,26 @@ def userData(userId):
 @app.route('/admin/userAdopt',methods=['GET','POST'])
 @login_required
 def userAdopt():
+
     if request.method == 'POST':
             # 获取被修改用户id与管理员名称
             adminUserId = session['adminUserId']
-            item = json.loads(request.data)
-            print(item)
-
+            item = json.loads(request.data.decode('utf-8'))
             userId = item['userId'].strip()
 
             # 将用户修改为已被处理
-            result = User.query.filter(User.userId == userId).first()
-            result.isHandle = True
-            result.handleName = adminUserId
-            result.updateTime = datetime.now()
+            jurisdiction = tuple(session['jurisdiction'])
+            user = User.query.filter(User.userId == userId).first()
+            # 防止管理员获取无权限用户信息
+            if not user:
+                return redirect(url_for('userList'))
+
+            if user.userClass not in jurisdiction:
+                return redirect(url_for('userList'))
+
+            user.isHandle = True
+            user.handleName = adminUserId
+            user.updateTime = datetime.now()
             db.session.commit()
             return jsonify(status_code=200, msg="发送成功")
     abort(404)
@@ -183,7 +193,7 @@ def userAdopt():
 def userImgDel():
     if request.method == 'POST':
         try:
-            item = json.loads(request.data)
+            item = json.loads(request.data.decode('utf-8'))
             userId = item['userId'].strip()
             fileName = item['fileName'].strip()
             result = UserImage.query.filter_by(userId=userId,fileName=fileName).first()

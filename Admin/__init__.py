@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 # app = Flask(__name__)
 
-app.debug = True
+# app.debug = True
 
 app.config["SECRET_KEY"] = os.urandom(24)
 app.secret_key = os.urandom(24)
@@ -26,8 +26,8 @@ login_manager.init_app(app=app)
 
 
 # 指定数据库的链接信息
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pymssql://gt:server123!@#@172.0.10.59/GtPowerManage'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://zhang:zhang@94.191.80.61:3306/Application'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pymssql://gt:server123!@#@172.0.10.59/GtPowerManage'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://zhang:zhang@94.191.80.61:3306/Application'
 
 # 这个配置将来会被禁用,设置为True或者False可以解除警告信息,建议设置False
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

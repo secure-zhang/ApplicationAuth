@@ -105,3 +105,25 @@ files = from.files.data
 ('YH','北京事业一部'),
 ('YZ','投一'),
 ('ZG','资管'),
+
+
+在用户登录时 从sybase获取用户信息 包括（用户名称，用户账户，用户手机号，用户类，用户评级）
+若用户数据不全、存在错误则返回提升信息，（联系客服。。。）
+
+成立则存储用户信息，并发送验证码至用户手机号
+
+
+
+string url = string.Format("http://www.139000.com/send/gsend.asp?name={0}&pwd={1}&dst={2}&msg={3}",
+                        ToUrlEncode("冠通期货"), "gtqh0037", mobiles, ToUrlEncode(line));
+
+http://www.139000.com/send/gsend.asp?name=冠通期货&pwd=gtqh0037&dst=17635035787&msg=hello
+http://www.139000.com/send/getfee.asp
+
+http://www.139000.com/send/gsend.asp?name=%b9%da%cd%a8%c6%da%bb%f5&pwd=gtqh0037&dst=15235131028&msg=11111111
+
+http://www.139000.com/send/gsend.asp?name=%b9%da%cd%a8%c6%da%bb%f5&pwd=gtqh0037&dst=15235131028&msg=11111111
+
+http://www.139000.com/send/gsend.asp?name=%b9%da%cd%a8%c6%da%bb%f5&pwd=gtqh0037&dst=17635035787&msg=hello
+
+http://www.139000.com/send/getfee.asp?name=%25b9%25da%25cd%25a8%25c6%25da%25bb%25f5&pwd=GTQH0037

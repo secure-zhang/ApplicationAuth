@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-3.3.7-dist/css/bootstrap.min.css') }}">
 
     <style>
-        .header .navbar{background-color: #393D49;height: 45px;}
+        .navbar{background-color: #393D49}
         .header .navbar-header a{color: rgba(255,255,255,.7);font-size: 25px}
         .main a{text-decoration: none;}
         .text-indent{text-indent:2em;}
@@ -24,17 +24,33 @@
   </head>
   <body>
 <!--    导航条-->
-    <div class="header">
             <nav class="navbar navbar-inverse">
                 <div class="container-fluid">
 <!--                    logo-->
                 <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                      </button>
                     <a class="navbar-brand" href="">Gt Futures</a>
                 </div>
+                {% if session.userId %}
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">当前登录: {{session.userId}} <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                          <li ><a href="{{ url_for('logout') }}">注销</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                {% endif %}
+            </div><!-- /.navbar-collapse -->
               </div>
             </nav>
-        </div>
 
 <!--    内容-->
     <div class="container-fluid warp">

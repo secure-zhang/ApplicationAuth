@@ -35,7 +35,7 @@
           <div>{{ form.csrf_token(id='token') }}</div>
           {{ form.submit(class='btn btn-primary a_width') }}
       </div>
-      <div class="form-group">
+      <div class="form-group col-xs-12  col-sm-4 col-sm-offset-4">
           <span class="text-danger text-center">{{ get_flashed_messages()[0] }}</span>
       </div>
     </form>
@@ -63,8 +63,12 @@
                     if(res.status_code == 200){
                             alert(res.msg);
                             sleep(code,60);
-                    }else{
-                    alert("验证码发送失败");
+                    }else if(res.status_code == 404){
+                        alert(res.msg);
+                        self.location.href="http://114.251.192.185:8080/clients/register/start"
+                    }
+                    else{
+                    alert(res.msg);
                         sleep(code,10);
                     }
                 },

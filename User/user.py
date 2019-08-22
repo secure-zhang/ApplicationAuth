@@ -8,6 +8,7 @@ from datetime import timedelta
 import random,json
 from model import User,PhoneCode,UserData,UserImage
 import uuid
+from config import Sybase
 
 # 创建 user 蓝图
 from flask import Blueprint
@@ -33,9 +34,7 @@ def login():
         user = User.query.filter_by(userId=form.userId.data.strip()).first()
         if user.isData:
             return redirect(url_for('success'))
-        # 系统判断柜台是否通过适当性测试，若已通过显示评级，若未通过，转到适当性链接
-        if user.userGrade == 5:
-            return redirect(location='http://114.251.192.185:8080/clients/register/start')
+
         # 用户信息持久化 30 分钟
         session['userId'] = user.userId
         session['userName'] = user.userName
@@ -62,15 +61,30 @@ def sendCode():
     item = json.loads(request.data.decode('utf-8'))
     userId = item['userid'].strip()
     userName = item['username'].strip()
-    user = User.query.filter_by(userId=userId,userName=userName).first()
-    if user:
-        # 若存在用户,生成验证码
-        phone = user.phone
+    # 从sybase获取用户数据并写入数据库
+    s = Sybase()
+    phone = s.cust_whole(userId,userName)
+    userClass = s.cust_basic(userId)
+    userGrade = s.cust_appropriate_assessment(userId)
+    print(userId,userName,phone, userClass, userGrade)
+    if phone and userClass :
+        if not userGrade:
+            # 系统判断柜台是否通过适当性测试，若已通过显示评级，若未通过，转到适当性链接
+            return jsonify(status_code=404, msg="请进行适当性测试")
+        # 判断，手机号是否正确,
+
+        # 将用户数据添加到数据库
+        user = User.query.filter_by(userId=userId,userName=userName).first()
+        if not user:
+            User(userId=userId, userName=userName, phone=phone, userClass=userClass,userGrade=userGrade).add()
+        # 生成验证码
         code = random.randint(0, 999999)
-        pc = PhoneCode(userId=userId,code=code)
+        pc = PhoneCode(userId=userId,phone=phone,code=code)
         pc.add()
+
         return jsonify(status_code=200, msg="%s"%code)
-    return jsonify(status_code=404, msg="账号或姓名错误")
+
+    return jsonify(status_code=404, msg="账号或姓名错误,请联系客服,客服电话：400-6678-656")
 
 # 申请表
 @app.route('/user/apply',methods=['GET','POST'])
@@ -130,6 +144,7 @@ def apply():
             userId = session['userId']
             user = User.query.filter_by(userId=userId).first()
             user.isData = True
+            db.session.commit()
             return redirect(url_for('explain'))
 
     return render_template('user/apply.html',form=form)
@@ -164,7 +179,6 @@ def explain(tag=0):
 @login_required
 def success():
 
-    db.session.commit()
     session.pop('userName',None)
     session.pop('userId',None)
     logout_user()
