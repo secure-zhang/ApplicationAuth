@@ -182,7 +182,7 @@ def userAdopt():
 
             user.isHandle = True
             user.handleName = adminUserId
-            user.updateTime = datetime.now()
+            user.updateTime = datetime.now().strftime('%Y-%m-%d %H:%I:%S')
             db.session.commit()
             return jsonify(status_code=200, msg="发送成功")
     abort(404)

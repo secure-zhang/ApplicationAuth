@@ -15,7 +15,7 @@ class Admin(UserMixin,db.Model):
     addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     tag = db.Column(db.Boolean(),nullable=False,default=False)
     def __str__(self):
-        return 'User{adminUserId=%s}' % (self.adminUserId)
+        return 'Admin{adminUserId=%s}' % (self.adminUserId)
 
     @property
     def password(self):
@@ -68,7 +68,7 @@ class User(db.Model):
     addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     updateTime = db.Column(db.DateTime())
     def __str__(self):
-        return 'Application{userId=%s,userName=%s,phone=%s,}' % (self.userId, self.userName, self.phone)
+        return 'User{userId=%s}' % (self.userId)
 
 class UserData(db.Model):
     __tablename__ = 'UserData'
@@ -89,8 +89,9 @@ class UserData(db.Model):
     company_auth = db.Column(db.Boolean(),nullable=False,default=False)
     transact_record = db.Column(db.Boolean(),nullable=False,default=False)
     outher_com_auth = db.Column(db.Boolean(),nullable=False,default=False)
-    def __repr__(self):
-        return '<User %r>' % (self.userId)
+    def __str__(self):
+        return 'User{userId=%s}' % (self.userId)
+
 class UserImage(db.Model):
     __tablename__ = 'UserImage'
     __table_args__ = {"useexisting": True}
@@ -99,8 +100,8 @@ class UserImage(db.Model):
     addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     fileName = db.Column(db.String(128))
     fileData = db.Column(db.Text())
-    def __repr__(self):
-        return '<User %r>' % (self.userId)
+    def __str__(self):
+        return 'User{userId=%s}' % (self.userId)
 
 if __name__ == '__main__':
     db.create_all()

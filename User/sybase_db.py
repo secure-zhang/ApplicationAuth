@@ -14,9 +14,9 @@ cursor =cnxn.cursor()
 # print(row)
 
 # 查询用户评级
-cursor.execute("select assessment_risk_level from cust_appropriate_assessment where cust_no='%s'"%('11001052'))
-row = cursor.fetchone()
-print(row)
+# cursor.execute("select assessment_risk_level from cust_appropriate_assessment where cust_no='%s'"%('11001052'))
+# row = cursor.fetchone()
+# print(row)
 
 
 

@@ -2,14 +2,12 @@
 
 
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileAllowed
 from wtforms import StringField, BooleanField,SubmitField,validators,FileField
 from wtforms.validators import DataRequired,Length
 from flask import flash
 from model import User,PhoneCode
 from flask_login import login_user
-from __init__ import db
-from config import Sybase
+from config import RedisHelper
 
 
 class LoginForm(FlaskForm):
@@ -37,27 +35,36 @@ class LoginForm(FlaskForm):
     read_old = BooleanField(label='已阅读框',validators=[DataRequired()])
 
     submit = SubmitField(label='下一步')
-    # 验证是资金账号否存在
     def validate_userId(self, field):
+        # 是否为空
         if not self.userId.data or not self.userName.data or not self.code.data or not self.read_old.data:
             flash('请正确填写信息')
             raise validators.StopValidation(u'请正确填写信息')
+
+        # 用户是否存在
         userId = field.data
         userName = self.userName.data.strip()
+        code = self.code.data.strip()
         user = User.query.filter_by(userId=userId,userName=userName).first()
         if not user:
             flash('账号或姓名错误请重新输入')
             raise validators.StopValidation(u'资金账号未找到')
-        pc = PhoneCode.query.filter_by(userId=userId,code=self.code.data.strip()).order_by(PhoneCode.addTime.desc()).first()
-        if not pc:
+
+        # 验证码是否有效
+        redis_db = RedisHelper()
+        redis_code = redis_db.get_code(userId)
+        if not redis_code or redis_code != code.strip():
             flash('验证码错误')
             raise validators.StopValidation(u'验证码错误')
 
-        # 验证成功后删除验证码
-        db.session.delete(pc)
-        db.session.commit()
 
-        # 用户登陆，每次访问链接都通过此函数进行验证
+        # 验证成功后删除验证码
+        tag = redis_db.delete_code(userId)
+        if not tag:
+            flash('验证码清除失败')
+            raise validators.StopValidation(u'验证码清除失败')
+
+        # 用户登陆
         login_user(user)
 
 

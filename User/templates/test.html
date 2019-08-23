@@ -1,17 +1,1 @@
-    document.querySelector('#files').addEventListener('change', function () {
-        var file_list = document.querySelector('#files').files;
-        for(var i=0;i<file_list.length;i++) {
-            data = lrz(file_list[i])
-            .then(function (rst) {
-                // 处理成功会执行
-                send_img(rst);
-            })
-            .catch(function (err) {
-                alert('上传失败');
-                // 处理失败会执行
-            })
-            .always(function () {
-                // 不管是成功失败，都会执行
-            });
-        }
-        });
+error

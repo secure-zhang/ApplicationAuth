@@ -7,18 +7,18 @@ class User(db.Model):
     __tablename__ = 'User'
     __table_args__ = {"useexisting": True}
     id = db.Column(db.Integer(),primary_key=True,autoincrement=True)
-    userId = db.Column(db.String(64),nullable=False,unique=True)
-    userName = db.Column(db.String(64),nullable=False)
+    userId = db.Column(db.String(64),nullable=False,unique=True)   # 资金账号
+    userName = db.Column(db.String(64),nullable=False)  # 用户姓名
     userClass = db.Column(db.String(64),nullable=False) # 用户类
     userGrade = db.Column(db.Integer(),nullable=False)  # 用户评级
-    phone = db.Column(db.String(11),nullable=False)
-    isHandle = db.Column(db.Integer(),nullable=False,default=2)
-    isData = db.Column(db.Boolean(),nullable=False,default=False)
-    handleName = db.Column(db.String(11),nullable=False,default='无')
-    addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
-    updateTime = db.Column(db.DateTime())
+    phone = db.Column(db.String(11),nullable=False)     # 用户手机计号
+    isData = db.Column(db.Boolean(),nullable=False,default=False) # 是否存在申请表
+    isHandle = db.Column(db.Integer(),nullable=False,default=2) # 是否被处理
+    handleName = db.Column(db.String(11),nullable=False,default='无') # 处理人
+    addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now()) # 添加时间
+    updateTime = db.Column(db.DateTime())   # 修改时间
     def __str__(self):
-        return 'Application{userId=%s,userName=%s,phone=%s,}' % (self.userId, self.userName, self.phone)
+        return 'User{userId=%s}' % (self.userId)
     def get_id(self):
         return unicode(self.id)
 
@@ -38,18 +38,18 @@ class User(db.Model):
             return 1
         except:
             return 0
+
 class PhoneCode(db.Model):
     __tablename__ = 'PhoneCode'
     __table_args__ = {"useexisting": True}
     id = db.Column(db.Integer(),primary_key=True,autoincrement=True)
-    userId = db.Column(db.String(64),db.ForeignKey('User.userId'), nullable=False)
-    code = db.Column(db.String(11),nullable=False)
-    phone = db.Column(db.String(11),nullable=False)
-    addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
+    userId = db.Column(db.String(64),db.ForeignKey('User.userId'), nullable=False) # 资金账号
+    code = db.Column(db.String(11),nullable=False)  # 验证码
+    phone = db.Column(db.String(11),nullable=False) # 手机号
+    addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now()) # 添加时间
 
     def __str__(self):
-        return 'Application{userId=%s,code=%s,addTime=%s,}' % (self.userId, self.code, self.addTime)
-
+        return 'PhoneCode{userId=%s}' % (self.userId)
     def add(self):
         try:
             db.session.add(self)
@@ -58,15 +58,12 @@ class PhoneCode(db.Model):
         except:
             return 0
 
-    def __repr__(self):
-        return '<userId %r>' % (self.userId)
 
 class UserData(db.Model):
     __tablename__ = 'UserData'
     __table_args__ = {"useexisting": True}
     id = db.Column(db.Integer(),primary_key=True,autoincrement=True)
-    userId = db.Column(db.String(64),db.ForeignKey('User.userId'), nullable=False)
-    addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now())
+    userId = db.Column(db.String(64),db.ForeignKey('User.userId'), nullable=False) # 资金账号
     cffex_c4 = db.Column(db.Boolean(),nullable=False,default=False)
     ine_c3 = db.Column(db.Boolean(),nullable=False,default=False)
     ine_c4 = db.Column(db.Boolean(),nullable=False,default=False)
@@ -80,6 +77,7 @@ class UserData(db.Model):
     company_auth = db.Column(db.Boolean(),nullable=False,default=False)
     transact_record = db.Column(db.Boolean(),nullable=False,default=False)
     outher_com_auth = db.Column(db.Boolean(),nullable=False,default=False)
+    addTime = db.Column(db.DateTime(), nullable=False, default=datetime.now()) # 添加时间
     def add(self):
         try:
             db.session.add(self)
@@ -87,8 +85,8 @@ class UserData(db.Model):
             return 1
         except Exception as e:
             return 0
-    def __repr__(self):
-        return '<userId %r>' % (self.userId)
+    def __str__(self):
+        return 'UserData{userId=%s}' % (self.userId)
 
 class UserImage(db.Model):
     __tablename__ = 'UserImage'

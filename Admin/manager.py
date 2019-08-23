@@ -15,6 +15,6 @@ def not_found(e):
     return render_template('test.html')
 
 if __name__ == '__main__':
-    http_server = WSGIServer(('0.0.0.0', 8081), app)
-    http_server.serve_forever()
-    # app.run('127.0.0.1', 8081)
+    # http_server = WSGIServer(('0.0.0.0', 8081), app)
+    # http_server.serve_forever()
+    app.run('127.0.0.1', 8081)
