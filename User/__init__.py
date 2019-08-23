@@ -8,6 +8,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 app = Flask(__name__)
+# app.debug = True
 
 # 限制ip频繁请求
 limiter = Limiter(
@@ -17,7 +18,6 @@ limiter = Limiter(
 )
 
 
-app.debug = True
 
 app.config["SECRET_KEY"] = os.urandom(24)
 app.secret_key = os.urandom(24)
