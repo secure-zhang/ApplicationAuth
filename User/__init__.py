@@ -1,14 +1,14 @@
 from flask import Flask
 from flask_wtf.csrf import CsrfProtect
 from flask_sqlalchemy import SQLAlchemy
-import os,pypyodbc
+import os,pyodbc
 import redis
 
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 app = Flask(__name__)
-# app.debug = True
+app.debug = True
 
 # 限制ip频繁请求
 limiter = Limiter(
@@ -46,8 +46,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pymssql://gt:server123!@#@172.0.1
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# 配置sybase
-sybase_db = pypyodbc.connect("DSN=sybase;UID=kstrader;PWD=kstrader")
 
 # 配置redis
 redis_db = redis.Redis(host='127.0.0.1',port=6379)#连接Redis

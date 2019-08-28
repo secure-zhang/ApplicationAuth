@@ -58,16 +58,13 @@ def logout():
 
 
 # 获取验证码
-@limiter.limit( "3 per hour")  # 设置ip限制
+@limiter.limit( "10 per hour")  # 设置ip限制
 @app.route('/user/sendCode',methods=['POST'])
 def sendCode():
     # 获取ajax传送的数据
-    try:
-        item = json.loads(request.data.decode('utf-8'))
-        userId = item['userid'].strip()
-        userName = item['username'].strip()
-    except:
-        abort(Response('sendCode get input error'))
+    item = json.loads(request.data.decode('utf-8'))
+    userId = item['userid'].strip()
+    userName = item['username'].strip()
 
     # 验证是否存在且手机号格式是否正确
     try:
@@ -78,20 +75,18 @@ def sendCode():
             if not ret:
                 return jsonify(status_code=200, msg="手机号格式错误,联系客服修改,客服电话：400-6678-656")
             else:
-                phone = ret
+                phone = ret.group()
         else:
-            return jsonify(status_code=200, msg="账号或姓名错误,请联系客服,客服电话：400-6678-656")
+            return jsonify(status_code=200, msg="用户信息存在错误,请联系客服,客服电话：400-6678-656")
 
         # 验证客户类是否存在
         userClass = s.cust_basic(userId)
         if not userClass:
             return jsonify(status_code=200, msg="未查询到客户类,联系客服修改,客服电话：400-6678-656")
-
         # 验证是否通过显示评级，若未通过，转到适当性链接
         userGrade = s.cust_appropriate_assessment(userId)
         if not userGrade:
             return jsonify(status_code=404, msg="请进行适当性测试")
-
 
         # 将用户数据添加到数据库
         user = User.query.filter_by(userId=userId,userName=userName).first()
@@ -99,20 +94,19 @@ def sendCode():
             User(userId=userId, userName=userName, phone=phone, userClass=userClass,userGrade=userGrade).add()
     except:
         abort(Response('sendcode user error'))
-
     try:
         # 随机生成验证码
         code = random.randint(0, 999999)
         # 记录验证码
         redis_db = RedisHelper()
-        tag = redis_db.add(userId,code)
-
+        tag = redis_db.add_code(userId,code)
         # 发送验证码
         if tag:
-            code_msg = '%s' % code
+            code_msg = ('验证码:%s' % code).encode('gb2312')
+            code_msg = str(code_msg).replace(r'\x', r'%')[2:-1]
             url = 'http://www.139000.com/send/gsend.asp?name=%b9%da%cd%a8%c6%da%bb%f5&pwd=gtqh0037&dst={dst}&msg={msg}'.format(
                 dst='17635035787', msg=code_msg)
-            requests.get(url)
+            # requests.get(url)
             return jsonify(status_code=200, msg="验证码发送成功%s" % code)
         else:
             return jsonify(status_code=200, msg="验证码记录失败")

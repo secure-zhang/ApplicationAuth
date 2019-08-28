@@ -36,7 +36,7 @@ class User(db.Model):
             db.session.add(self)
             db.session.commit()
             return 1
-        except:
+        except Exception as e:
             return 0
 
 class PhoneCode(db.Model):

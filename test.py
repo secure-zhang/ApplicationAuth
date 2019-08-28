@@ -6,14 +6,18 @@
 # tmp_file_name = 'img-%s.png' % uuid_str
 # print(tmp_file_name)
 
-# # 发送验证码
-# import requests,random
-#
+# 发送验证码 GBK GB2312 UTF-8
+# import requests,random,re,chardet
 # code = random.randint(0, 999999)
 #
-# code_msg = ('手机验证码:%s,1分钟内有效' % code)
-# url = 'http://www.139000.com/send/gsend.asp?name=%b9%da%cd%a8%c6%da%bb%f5&pwd=gtqh0037&dst={dst}&msg={msg}'.format(dst='17635035787',msg=code_msg)
+# code_msg = ('验证码:%s' % code).encode('gb2312')
+# print(type(code_msg))
+# # print()
+# # print(chardet.detect(code_msg))
+# # print(code_msg.decode('gb2312'))
+# code_msg = str(code_msg).replace(r'\x',r'%')[2:-1]
 #
+# url = 'http://www.139000.com/send/gsend.asp?name=%b9%da%cd%a8%c6%da%bb%f5&pwd=gtqh0037&dst={dst}&msg={msg}'.format(dst='17635035787',msg=code_msg)
 # print(url)
 # res = requests.get(url)
 # print(res.status_code)
@@ -69,9 +73,9 @@
 #     r.get_code('11111')
 #     r.delete_code('11111')
 
-from _datetime import datetime
-print(datetime.now().strftime('%Y-%m-%d %H:%I:%S'))
-print(type(datetime.now().strftime('%Y-%m-%d %H:%I:%S')))
+# from _datetime import datetime
+# print(datetime.now().strftime('%Y-%m-%d %H:%I:%S'))
+# print(type(datetime.now().strftime('%Y-%m-%d %H:%I:%S')))
 
 
 

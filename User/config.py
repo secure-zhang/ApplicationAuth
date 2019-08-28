@@ -1,5 +1,8 @@
-from __init__ import sybase_db,redis_db
-
+from __init__ import redis_db
+import pyodbc
+# sybase_db = pypyodbc.connect("DSN=sybase;UID=kstrader;PWD=kstrader")
+conn_info = 'DRIVER={Sybase ASE ODBC Driver NEW};DATABASE=ksqhdb;NetworkAddress=10.0.0.3,2048;UID=kstrader;PWD=kstrader'
+sybase_db = pyodbc.connect(conn_info)
 class Sybase:
     def __init__(self):
         self.con = sybase_db
