@@ -1,8 +1,5 @@
-from __init__ import redis_db
-import pyodbc
-# sybase_db = pypyodbc.connect("DSN=sybase;UID=kstrader;PWD=kstrader")
-conn_info = 'DRIVER={Sybase ASE ODBC Driver NEW};DATABASE=ksqhdb;NetworkAddress=10.0.0.3,2048;UID=kstrader;PWD=kstrader'
-sybase_db = pyodbc.connect(conn_info)
+from __init__ import sybase_db,redis_db
+
 class Sybase:
     def __init__(self):
         self.con = sybase_db
@@ -90,9 +87,9 @@ class RedisHelper:
 
 if __name__ == '__main__':
     s = Sybase()
-    name = s.cust_name('11013156')
-    phone = s.cust_whole('11013156',name)
-    userClass = s.cust_basic('11013156')
-    userGrade = s.cust_appropriate_assessment('11013156')
+    name = s.cust_name('11001022')
+    phone = s.cust_whole('11001022',name)
+    userClass = s.cust_basic('11001022')
+    userGrade = s.cust_appropriate_assessment('11001022')
     print(name,phone, userClass, userGrade)
 

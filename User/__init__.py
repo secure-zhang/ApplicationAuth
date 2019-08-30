@@ -46,7 +46,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pymssql://gt:server123!@#@172.0.1
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-
+# 配置sybase
+# sybase_db = pypyodbc.connect("DSN=sybase;UID=kstrader;PWD=kstrader")
+conn_info = 'DRIVER={Sybase ASE ODBC Driver};DATABASE=ksqhdb;NetworkAddress=10.0.0.3,2048;UID=kstrader;PWD=kstrader'
+sybase_db = pyodbc.connect(conn_info)
 # 配置redis
 redis_db = redis.Redis(host='127.0.0.1',port=6379)#连接Redis
 

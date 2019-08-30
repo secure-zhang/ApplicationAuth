@@ -32,15 +32,17 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         try:
+            # 判断用户是否已提交申请
             user = User.query.filter_by(userId=form.userId.data.strip()).first()
             if user.isData:
                 return redirect(url_for('success'))
 
-            # 用户信息持久化 30 分钟
+            # 在session存储用户信息
             session['userId'] = user.userId
             session['userName'] = user.userName
             session['userGrade'] = user.userGrade
 
+            # 用户信息持久化 30 分钟
             session.permanent = True
             app.permanent_session_lifetime = timedelta(minutes=30)
             return redirect(url_for('apply'))
@@ -54,11 +56,12 @@ def logout():
     logout_user()
     session.pop('userName',None)
     session.pop('userId',None)
+    session.pop('userGrade',None)
     return redirect(url_for('index'))
 
-
+ # 设置ip限制
+@limiter.limit( "3 per hour")
 # 获取验证码
-@limiter.limit( "10 per hour")  # 设置ip限制
 @app.route('/user/sendCode',methods=['POST'])
 def sendCode():
     # 获取ajax传送的数据
@@ -67,51 +70,50 @@ def sendCode():
     userName = item['username'].strip()
 
     # 验证是否存在且手机号格式是否正确
-    try:
-        s = Sybase()
-        phone = s.cust_whole(userId,userName)
-        if phone:
-            ret = re.match(r"^1[3-9]\d{9}$", phone)
-            if not ret:
-                return jsonify(status_code=200, msg="手机号格式错误,联系客服修改,客服电话：400-6678-656")
-            else:
-                phone = ret.group()
+    s = Sybase()
+    phone = s.cust_whole(userId,userName)
+    if phone:
+        ret = re.match(r"^1[3-9]\d{9}$", phone)
+        if not ret:
+            return jsonify(status_code=202, msg="手机号格式错误,联系客服修改,客服电话：400-6678-656")
         else:
-            return jsonify(status_code=200, msg="用户信息存在错误,请联系客服,客服电话：400-6678-656")
+            phone = ret.group()
+    else:
+        return jsonify(status_code=202, msg="用户信息存在错误,请联系客服,客服电话：400-6678-656")
 
-        # 验证客户类是否存在
-        userClass = s.cust_basic(userId)
-        if not userClass:
-            return jsonify(status_code=200, msg="未查询到客户类,联系客服修改,客服电话：400-6678-656")
-        # 验证是否通过显示评级，若未通过，转到适当性链接
-        userGrade = s.cust_appropriate_assessment(userId)
-        if not userGrade:
-            return jsonify(status_code=404, msg="请进行适当性测试")
+    # 验证客户类是否存在
+    userClass = s.cust_basic(userId)
+    if not userClass:
+        return jsonify(status_code=202, msg="未查询到客户类,联系客服修改,客服电话：400-6678-656")
 
-        # 将用户数据添加到数据库
-        user = User.query.filter_by(userId=userId,userName=userName).first()
-        if not user:
-            User(userId=userId, userName=userName, phone=phone, userClass=userClass,userGrade=userGrade).add()
-    except:
-        abort(Response('sendcode user error'))
-    try:
-        # 随机生成验证码
-        code = random.randint(0, 999999)
-        # 记录验证码
-        redis_db = RedisHelper()
-        tag = redis_db.add_code(userId,code)
-        # 发送验证码
-        if tag:
-            code_msg = ('验证码:%s' % code).encode('gb2312')
-            code_msg = str(code_msg).replace(r'\x', r'%')[2:-1]
-            url = 'http://www.139000.com/send/gsend.asp?name=%b9%da%cd%a8%c6%da%bb%f5&pwd=gtqh0037&dst={dst}&msg={msg}'.format(
-                dst='17635035787', msg=code_msg)
-            # requests.get(url)
-            return jsonify(status_code=200, msg="验证码发送成功%s" % code)
-        else:
-            return jsonify(status_code=200, msg="验证码记录失败")
-    except:
-        abort(Response('sendcode redis_code error'))
+    # 验证是否通过显示评级，若未通过，转到适当性链接
+    userGrade = s.cust_appropriate_assessment(userId)
+    if not userGrade:
+        return jsonify(status_code=301, msg="请进行适当性测试")
+
+    # 将用户数据添加到数据库
+    user = User.query.filter_by(userId=userId,userName=userName).first()
+    if not user:
+        User(userId=userId, userName=userName, phone=phone, userClass=userClass,userGrade=userGrade).add()
+
+
+    # 随机生成验证码
+    code = random.randint(0, 999999)
+
+    # 记录验证码
+    redis_db = RedisHelper()
+    tag = redis_db.add_code(userId,code)
+
+    # 发送验证码
+    if tag:
+        code_msg = ('验证码:%s' % code).encode('gb2312')
+        code_msg = str(code_msg).replace(r'\x', r'%')[2:-1]
+        url = 'http://www.139000.com/send/gsend.asp?name=%b9%da%cd%a8%c6%da%bb%f5&pwd=gtqh0037&dst={dst}&msg={msg}'.format(
+            dst='17635035787', msg=code_msg)
+        # requests.get(url)
+        return jsonify(status_code=200, msg="验证码发送成功%s" % code)
+    else:
+        return jsonify(status_code=202, msg="验证码记录失败")
 
 
 # 申请表
@@ -164,6 +166,7 @@ def apply():
             company_auth =form.company_auth.data
             transact_record =form.transact_record.data
             outher_com_auth =form.outher_com_auth.data
+
             # 记录数据
             data = UserData(userId=userId, cffex_c4=cffex_c4, ine_c3=ine_c3, ine_c4=ine_c4, shfe_c4=shfe_c4, dce_c3=dce_c3,
                           dce_c4=dce_c4, czce_c3=czce_c3, czce_c4=czce_c4, cffex_code=cffex_code, ine_code=ine_code, company_auth=company_auth, transact_record=transact_record,
@@ -171,15 +174,11 @@ def apply():
 
             tag1 = data.add()
             if tag1:
-                try:
                     userId = session['userId']
                     user = User.query.filter_by(userId=userId).first()
                     user.isData = True
                     db.session.commit()
                     return redirect(url_for('explain'))
-                except:
-                    abort(Response('apply insert error'))
-
             else:
                 redirect(url_for('apply'))
 
@@ -209,16 +208,12 @@ def send_img():
 @app.route('/user/explain/<int:tag>',methods=['GET'])
 @login_required
 def explain(tag=0):
-    try:
         if tag == 1:
             return render_template('user/Agreement/ComplianceLetterHonestyCommitment.html')
         if tag == 2:
             return render_template('user/Agreement/FuturesTradingRiskInstructions.html')
         else:
             return render_template('user/explain.html')
-    except:
-        abort(Response('explain error'))
-
 
 # 关闭界面
 @app.route('/user/success',methods=['GET','POST'])
@@ -227,5 +222,6 @@ def success():
 
     session.pop('userName',None)
     session.pop('userId',None)
+    session.pop('userGrade',None)
     logout_user()
     return render_template('user/success.html')

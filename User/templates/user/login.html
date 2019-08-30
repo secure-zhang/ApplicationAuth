@@ -56,26 +56,25 @@
                 data: JSON.stringify({userid:userid,username:username}),
                 dataType:"json",
                 type:"post",
-                async : false,
+				async:false;
                 cache : false,
                 success:function(res){
                     // debugger;
                     if(res.status_code == 200){
                             alert(res.msg);
                             sleep(code,60);
-                    }else if(res.status_code == 404){
+                    }else if(res.status_code == 301){
                         alert(res.msg);
                         self.location.href="http://114.251.192.185:8080/clients/register/start"
                     }
                     else{
-                    alert(res.msg);
+                        alert(res.msg);
                         sleep(code,10);
                     }
                 },
                 error:function(){
-					window.location.reload();
-					
-                    
+                    alert(res.msg);
+                    window.location.reload();
                 }
             })
         }

@@ -30,11 +30,22 @@
     cursor: pointer;
 
   }
+    #myspin{
+        display: none;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    *position: absolute;
+    *height: 1380px;
+    background: black;
+    top:0;
+    left: 0;
+    opacity:0.6;}
+
 </style>
 
 <!--        内容-->
 <div class="center">
-    <div id="myspin"></div>
     {% if session.userId %}
         <p>资金账号：{{session.userId}} 姓名：{{session.userName}} 评测风险级别：{{session.userGrade}}</p>
     {% endif %}
@@ -171,6 +182,7 @@
         <!--            上边标签被选定则显示-->
 
                     <div id="file"  class="form-inline" style="display:none">
+                        <div id="myspin"></div>
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">点击上传</button>
                         <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                             <div class="modal-dialog modal-lg" role="document">
@@ -270,9 +282,6 @@ var id=0;
     }).off("mouseleave","div").on("mouseleave","div",function(){
 
     });
-
-    // 压缩图片并上传
-    function CompressImg () {
         var opts = {
             lines: 13, // 花瓣数目
             length: 20, // 花瓣长度
@@ -288,12 +297,17 @@ var id=0;
             hwaccel: false, //spinner 是否启用硬件加速及高速旋转
             className: 'spinner', // spinner css 样式名称
             zIndex: 2e9, // spinner的z轴 (默认是2000000000)
-            top: 'auto', // spinner 相对父容器Top定位 单位 px
-            left: 'auto'// spinner 相对父容器Left定位 单位 px
+            top: '50%', // spinner 相对父容器Top定位 单位 px
+            left: '50%'// spinner 相对父容器Left定位 单位 px
         };
+
+    // 压缩图片并上传
+    function CompressImg () {
+
         var spinner = new Spinner(opts);
         var target = $("#myspin").get(0);
         spinner.spin(target);//显示loading图标
+        $("#myspin").css("display","block");
             for(var i=0;i<file_list.length;i++) {
                 // 判断是否被删除
             if (!delete_img_id_list.includes(String(i+1))){
@@ -311,7 +325,11 @@ var id=0;
                     });
                 }
             }
+        setTimeout(function(){
             spinner.spin();
+            $("#myspin").css("display","none");
+	    }, 1000);
+
      }
     function SendImg(data) {
         var token = $("#token").val();
@@ -322,14 +340,12 @@ var id=0;
                 data: JSON.stringify(data),
                 dataType: "json",
                 type: "post",
-                async: false,
+				async:false;
                 cache: false,
                 success: function (res) {
                     // debugger;
                     if (res.status_code == 200) {
                         console.log(res)
-                    } else {
-                        alert("发送失败");
                     }
                 },
                 error: function () {

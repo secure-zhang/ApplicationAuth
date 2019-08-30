@@ -65,6 +65,7 @@
 <!--        内容--><!--模板继承-->
         <div class="row">
           <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+
               {% block base %}
 
               {% endblock %}
@@ -72,6 +73,7 @@
         </div>
 <!--        页脚-->
         <hr>
+
         <div class="row">
           <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 text-center">
             <small>冠通客服电话：400-6678-656</small>
@@ -84,5 +86,6 @@
     <script src="{{ url_for('static',filename='bootstrap-3.3.7-dist/js/jquery.min.js') }}"></script>
 <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
       <script src="{{ url_for('static',filename='bootstrap-3.3.7-dist/js/bootstrap.min.js') }}"></script>
+
   </body>
 </html>

@@ -5,30 +5,5 @@
     .a_width{width: 49%}
 </style>
 <!--        内容-->
-<h3 class="text-center lead"></h3>
-<div class="center">
-        <div class="form-group text-center">
-            <a class="btn btn-default a_width" href="{{ url_for('adminLogin') }}">用户登录</a>
-        </div>
-   </div>
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-default" data-toggle="modal" data-target=".bs-example-modal-lg">{{ k }}</button>
-                                    <div class="modal bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                           <div class="modal-content">
-                                              <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                <h4 class="modal-title">{{ k }}</h4>
-                                              </div>
-                                              <div class="modal-body">
-                                                    <img class="img-responsive center-block" src=" {{ v }} ">
-                                              </div>
-                                              <div class="modal-footer">
-                                                  <button type="button" class="btn btn-primary" onclick="deleteImg()"  data-dismiss="modal">删除</button>
-                                                  <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
-                                              </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+<h3 class="text-center lead">error</h3>
 {% endblock %}
